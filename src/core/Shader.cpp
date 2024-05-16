@@ -7,11 +7,11 @@
 
 Shader::~Shader()
 {
-    glDeleteProgram(id);
+    glDeleteProgram(m_id);
 }
 
 
-bool Shader::create(const std::string& vertex_path, const std::string& fragment_path)
+bool Shader::load(const std::string& vertex_path, const std::string& fragment_path)
 {
 
     std::string source_line;    
@@ -122,7 +122,40 @@ bool Shader::compile_shader(const std::string& vertex_source, const std::string&
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
 
-    id = program;
+    m_id = program;
 
     return true;
+}
+
+void Shader::bind()
+{
+    glUseProgram(m_id);
+}
+
+void Shader::unbind()
+{
+    glUseProgram(0);
+}
+
+
+//Can optimize the hell out of all these functions by saving uniform locations in a map or something.
+//Will implement this later
+void Shader::set_mat4fv(const std::string& name, float* matrix)
+{
+    glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, matrix);
+}
+
+void Shader::set_vec3f(const std::string& name, float x, float y, float z)
+{
+    glUniform3f(glGetUniformLocation(m_id, name.c_str()), x, y, z);
+}
+
+void Shader::set_vec3fv(const std::string& name, float* vec)
+{
+    glUniform3fv(glGetUniformLocation(m_id, name.c_str()), 1, vec);
+}
+
+void Shader::set_int(const std::string& name, int i)
+{
+    glUniform1i(glGetUniformLocation(m_id, name.c_str()), i);
 }

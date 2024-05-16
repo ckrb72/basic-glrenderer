@@ -9,6 +9,8 @@
 
 #include <iostream>
 
+#include "./core/Shader.h"
+
 int main()
 {
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -37,8 +39,16 @@ int main()
         return -1;
     }
 
+    Shader s;
+    if(!s.create("./test.vert", "./test.frag"))
+    {
+        std::cout << "Failed to load shader" << std::endl;
+    }
+
 
     bool quit = false;
+
+    glEnable(GL_DEPTH_TEST);
 
     while(!quit)
     {
@@ -54,6 +64,13 @@ int main()
                     break;
             }
         }
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glClearColor(0.3, 0.3, 0.3, 1.0);
+
+
+        SDL_GL_SwapWindow(window);
     }
 
     return 0;

@@ -23,10 +23,10 @@ int main()
 
     float vertices[] = 
     {
-        -0.5, -0.5, -1.0,   1.0, 0.0, 1.0,
-        0.5, -0.5, -1.0,    0.5, 0.3, 1.0,
-        0.5, 0.5, -1.0,     0.4, 1.0, 1.0,
-        -0.5, 0.5, -1.0,    0.6, 0.6, 0.6
+        -0.5, -0.5, 0.0,   1.0, 0.0, 1.0,
+        0.5, -0.5, 0.0,    0.5, 0.3, 1.0,
+        0.5, 0.5, 0.0,     0.4, 1.0, 1.0,
+        -0.5, 0.5, 0.0,    0.6, 0.6, 0.6
     };
 
     unsigned int indices[] = 
@@ -67,6 +67,8 @@ int main()
 
     float angle = 0;
 
+    lnal::vec3 axis(0.0, -1.0, 0.0);
+
     while(!quit)
     {
         SDL_Event event;
@@ -86,7 +88,15 @@ int main()
 
         glClearColor(0.3, 0.3, 0.3, 1.0);
 
+        lnal::mat4 model(1.0);
+        lnal::rotate(model, axis, angle);
+        lnal::translate_relative(model, lnal::vec3(0.0, 0.0, -3.0));
+
+        angle += 0.001;
+
         s.bind();
+        s.set_mat4fv("model", model.data());
+
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 

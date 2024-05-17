@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <string>
+#include <map>
 
 class Shader
 {
@@ -9,6 +10,8 @@ private:
     uint32_t m_id;
 
     bool compile_shader(const std::string& vertex_source, const std::string& fragment_source);
+
+    std::map<std::string, uint32_t> m_uniforms;
 
 public:
 

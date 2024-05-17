@@ -138,24 +138,60 @@ void Shader::unbind()
 }
 
 
-//Can optimize the hell out of all these functions by saving uniform locations in a map or something.
-//Will implement this later
+//Sends 4x4 float matrix over to uniform in shader
+//Binds the shader while doing this so BEWARE
+//@param name name of uniform to Set
+//@param matrix pointer to first element of column-major ordered matrix
 void Shader::set_mat4fv(const std::string& name, float* matrix)
 {
-    glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, matrix);
+    bind();
+
+    if(m_uniforms.count(name) == 0)
+        m_uniforms[name] = glGetUniformLocation(m_id, name.c_str());
+
+    glUniformMatrix4fv(m_uniforms[name], 1, GL_FALSE, matrix);
 }
 
+//Sends float vec3 over to uniform in shader
+//Binds the shader while doing this so BEWARE
+//@param name name of uniform to set
+//@param x vec.x
+//@param y vec.y
+//@param z vec.z
 void Shader::set_vec3f(const std::string& name, float x, float y, float z)
 {
-    glUniform3f(glGetUniformLocation(m_id, name.c_str()), x, y, z);
+    bind();
+
+    if(m_uniforms.count(name) == 0)
+        m_uniforms[name] = glGetUniformLocation(m_id, name.c_str());
+
+    glUniform3f(m_uniforms[name], x, y, z);
 }
 
+//Sends float vec3 over to uniform in shader
+//Binds the shader while doing this so BEWARE
+//@param name name of uniform to set
+//@param vec pointer to first element of vec
 void Shader::set_vec3fv(const std::string& name, float* vec)
 {
-    glUniform3fv(glGetUniformLocation(m_id, name.c_str()), 1, vec);
+    bind();
+
+    if(m_uniforms.count(name) == 0)
+        m_uniforms[name] = glGetUniformLocation(m_id, name.c_str());
+
+    glUniform3fv(m_uniforms[name], 1, vec);
 }
 
+//Sends int over to uniform in shader
+//Binds the shader while doing this so BEWARE
+//@param name name of uniform to set
+//@param i int
 void Shader::set_int(const std::string& name, int i)
 {
-    glUniform1i(glGetUniformLocation(m_id, name.c_str()), i);
+    bind();
+
+    if(m_uniforms.count(name) == 0)
+        m_uniforms[name] = glGetUniformLocation(m_id, name.c_str());
+    
+    glUniform1i(m_uniforms[name], i);
 }

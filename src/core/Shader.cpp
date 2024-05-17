@@ -195,3 +195,8 @@ void Shader::set_int(const std::string& name, int i)
     
     glUniform1i(m_uniforms[name], i);
 }
+
+uint32_t Shader::get_id()
+{
+    return m_id;
+}

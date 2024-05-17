@@ -1,13 +1,9 @@
 #include <graphics.h>
-
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 #include <iostream>
 
 #include "./core/Shader.h"
 #include "./core/Window.h"
+#include "./core/Texture.h"
 #include "./math/lnal.h"
 
 int main()
@@ -19,6 +15,13 @@ int main()
     if(!s.load("./test.vert", "./test.frag"))
     {
         std::cout << "Failed to load shader" << std::endl;
+    }
+
+    Texture t;
+
+    if(!t.load("./assets/img/container.jpg"))
+    {
+        std::cout << "Failed to load texture!" << std::endl;
     }
 
     float vertices[] = 
@@ -68,6 +71,10 @@ int main()
     float angle = 0;
 
     lnal::vec3 axis(0.0, -1.0, 0.0);
+
+    //s.set_int("container", 0);
+    //glActiveTexture(GL_TEXTURE0);
+    //glBindTexture(GL_TEXTURE_2D, t.get_id());
 
     while(!quit)
     {

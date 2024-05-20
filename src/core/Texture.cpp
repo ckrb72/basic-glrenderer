@@ -2,6 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <graphics.h>
+#include <iostream>
 
 //Might be a bug initializing m_id to 0 because I think OpenGL uses 0 for something (might not tho)
 Texture::Texture()
@@ -27,6 +28,11 @@ bool Texture::load(const std::string& filepath)
     if(!image)
         return false;
 
+        
+    m_width = width;
+    m_height = height;
+    m_channels = channels;
+
     if(!gpu_gen_texture((const unsigned char*)image))
     {
         stbi_image_free(image);
@@ -34,10 +40,6 @@ bool Texture::load(const std::string& filepath)
     }
 
     stbi_image_free(image);
-
-    m_width = width;
-    m_height = height;
-    m_channels = channels;
 
     return true;
 }
@@ -53,9 +55,12 @@ bool Texture::gpu_gen_texture(const unsigned char* texture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    //TODO: Need to make this work for any file type (right now it just works for jpgs)
+    //This shit is fucked fix plz!!!!
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
+    
     glGenerateMipmap(GL_TEXTURE_2D);
+
+    m_id = id;
 
     return true;
 }

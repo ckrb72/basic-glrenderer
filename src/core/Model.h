@@ -15,7 +15,5 @@ public:
 
     ~Model();
 
-    bool Model::load(const std::string& filepath);
-
-    
+    bool load(const std::string& filepath);
 };

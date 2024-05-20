@@ -24,7 +24,7 @@ int main()
 
     Texture t;
 
-    if(!t.load("./assets/img/container.jpg"))
+    if(!t.load("./assets/img/linux_PNG12.jpg"))
     {
         std::cout << "Failed to load texture!" << std::endl;
     }

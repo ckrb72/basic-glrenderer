@@ -1,0 +1,1 @@
+ g++ src/*.cpp src/core/*.cpp src/math/*.cpp src/*.c -DDEBUG -o main -I ./dependencies/include -L ./dependencies/lib -lmingw32 -lSDL2main -lSDL2 -lassimp -std=c++2a

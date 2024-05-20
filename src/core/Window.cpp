@@ -22,6 +22,9 @@ Window::Window(const std::string& title, uint32_t width, uint32_t height)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+
     SDL_GL_CreateContext(m_window);
 
     //Load gl function pointers via glad if not on APPLE (don't know if need this on linux)
@@ -33,6 +36,11 @@ Window::Window(const std::string& title, uint32_t width, uint32_t height)
         throw std::runtime_error("Failed to inialize GLAD!");
     }
     #endif
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_MULTISAMPLE);
 }
 
 Window::~Window()

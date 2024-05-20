@@ -9,8 +9,6 @@
 int main()
 {
     Window win("Spooky Game!!!!!", 1280, 720);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
 
     /*(glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);

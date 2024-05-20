@@ -35,8 +35,6 @@ bool Texture::load(const std::string& filepath)
     m_height = height;
     m_channels = channels;
 
-    std::cout << m_channels << std::endl;
-
     if(!gpu_gen_texture((const unsigned char*)image))
     {
         stbi_image_free(image);
@@ -59,7 +57,6 @@ bool Texture::gpu_gen_texture(const unsigned char* texture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    //This shit is fucked fix plz!!!!
     if(m_channels == 3)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
     else if(m_channels == 4)

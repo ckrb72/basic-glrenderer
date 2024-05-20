@@ -4,6 +4,8 @@
 #include <graphics.h>
 #include <iostream>
 
+#define GPU_FLIP_TEX
+
 //Might be a bug initializing m_id to 0 because I think OpenGL uses 0 for something (might not tho)
 Texture::Texture()
 :m_id(0), m_width(0), m_height(0), m_channels(0)
@@ -33,6 +35,8 @@ bool Texture::load(const std::string& filepath)
     m_height = height;
     m_channels = channels;
 
+    std::cout << m_channels << std::endl;
+
     if(!gpu_gen_texture((const unsigned char*)image))
     {
         stbi_image_free(image);
@@ -56,7 +60,10 @@ bool Texture::gpu_gen_texture(const unsigned char* texture)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     //This shit is fucked fix plz!!!!
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
+    if(m_channels == 3)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, texture);
+    else if(m_channels == 4)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture);
     
     glGenerateMipmap(GL_TEXTURE_2D);
 

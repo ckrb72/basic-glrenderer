@@ -11,7 +11,7 @@ private:
 
     bool compile_shader(const std::string& vertex_source, const std::string& fragment_source);
 
-    std::map<std::string, uint32_t> m_uniforms;
+    std::map<std::string, int32_t> m_uniforms;
 
 public:
 

@@ -4,15 +4,12 @@
 #include "./core/Shader.h"
 #include "./core/Window.h"
 #include "./core/Texture.h"
+#include "./core/Mesh.h"
 #include "./math/lnal.h"
 
 int main()
 {
     Window win("Spooky Game!!!!!", 1280, 720);
-
-    /*(glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);*/
 
     Shader s;
     if(!s.load("./test.vert", "./test.frag"))
@@ -26,6 +23,48 @@ int main()
     {
         std::cout << "Failed to load texture!" << std::endl;
     }
+
+
+    Shader test;
+    if(!test.load("./default.vert", "./default.frag"))
+    {
+        std::cout << "Failed to load shader" << std::endl;
+    }
+
+
+    Vertex v1;
+
+    v1.position = lnal::vec3(-0.5, -0.5, 0.0);
+    v1.color = lnal::vec3(1.0, 0.0, 1.0);
+    v1.tex_coords = lnal::vec2(0.0, 0.0);
+
+    Vertex v2;
+    v2.position = lnal::vec3(0.5, -0.5, 0.0);
+    v2.color = lnal::vec3(0.5, 0.3, 1.0);
+    v2.tex_coords = lnal::vec2(1.0, 0.0);
+
+    Vertex v3;
+    v3.position = lnal::vec3(0.5, 0.5, 0.0);
+    v3.color = lnal::vec3(0.4, 1.0, 1.0);
+    v3.tex_coords = lnal::vec2(1.0, 1.0);
+
+    Vertex v4;
+    v4.position = lnal::vec3(-0.5, 0.5, 0.0);
+    v4.color = lnal::vec3(0.6, 0.6, 0.6);
+    v4.tex_coords = lnal::vec2(0.0, 1.0);
+
+    std::vector<Vertex> vertice;
+    vertice.push_back(v1);
+    vertice.push_back(v2);
+    vertice.push_back(v3);
+    vertice.push_back(v4);
+
+    std::vector<unsigned int> indice = {0, 1, 2, 2, 3, 0};
+
+    std::vector<Texture> textures;
+
+    Mesh m;
+    m.load(vertice, indice, textures);
 
     float vertices[] = 
     {
@@ -70,8 +109,6 @@ int main()
     lnal::mat4 projection;
     lnal::gen_perspective_proj(projection, PI / 2, (float)(1280.0f/720.0f), 0.1, 10.0);
 
-    s.set_mat4fv("projection", projection.data());
-
     bool quit = false;
 
     float angle = 0;
@@ -81,6 +118,11 @@ int main()
     s.set_int("container", 0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, t.get_id());
+
+    lnal::mat4 test_model(1.0);
+
+    lnal::scale(test_model, lnal::vec3(0.5, 0.5, 1.0));
+    lnal::translate_relative(test_model, lnal::vec3(0.5, 0.0, -2.0));
     
 
     while(!quit)
@@ -109,9 +151,16 @@ int main()
 
         s.bind();
         s.set_mat4fv("model", model.data());
+        s.set_mat4fv("projection", projection.data());
 
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glBindVertexArray(0);
+
+        test.bind();
+        test.set_mat4fv("model", test_model.data());
+        test.set_mat4fv("projection", projection.data());
+        m.draw(test);
 
         win.swap_buffers();
     }

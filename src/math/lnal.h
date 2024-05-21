@@ -66,6 +66,57 @@ namespace lnal
 
     };
 
+    class vec2
+    {
+    private: 
+        float m_data[2];
+
+    public: 
+        
+        vec2() {};
+
+        vec2(float x, float y);
+
+        vec2 operator+(const vec2& rhs);
+        vec2 operator*(const float scalar);
+        vec2 operator-(const vec2& rhs);
+        
+
+        vec2& operator+=(const vec2& rhs);
+        vec2& operator*=(const vec2& rhs);
+        vec2& operator-=(const vec2& rhs);
+        vec2& operator*=(float scalar);
+
+        float& operator[](int index);
+
+        //Const version of [] overload for when we pass in const vecs to functions
+        const float& operator[](int index) const;
+
+
+        //Need to make these friends so we can have on the scalar on both sides of the operator
+        friend vec2 operator*(float scalar, const vec2& vec);
+        //friend vec3 operator*(const vec3& vec, float scalar);
+
+        //want to implement [] operator
+        
+        //Additional vector functionality
+
+        //Normalizes vector
+        void normalize();
+
+        //Prints out vector in nice format
+        void print() const;
+
+        //Returns the length of the vector
+        float len();
+
+        //Returns the length of the vector squared
+        float len_sqr();
+
+        const float* data() const;
+
+    };
+
     class mat4
     {
     private:
@@ -74,7 +125,7 @@ namespace lnal
 
     public:
 
-        mat4() {};
+        mat4();
 
         mat4(float a);
 

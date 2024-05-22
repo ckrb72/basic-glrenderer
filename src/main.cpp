@@ -7,8 +7,20 @@
 #include "./core/Mesh.h"
 #include "./math/lnal.h"
 
+#include <soloud/soloud.h>
+#include <soloud/soloud_wav.h>
+
 int main()
 {
+
+    SoLoud::Soloud soloud;
+    SoLoud::Wav sample;
+
+    soloud.init();
+    sample.load("./assets/sounds/Lucas_Scream.wav");
+
+    int handle = soloud.play(sample);
+
     Window win("Spooky Game!!!!!", 1280, 720);
 
     Shader s;
@@ -23,7 +35,6 @@ int main()
     {
         std::cout << "Failed to load texture!" << std::endl;
     }
-
 
     Shader test;
     if(!test.load("./default.vert", "./default.frag"))

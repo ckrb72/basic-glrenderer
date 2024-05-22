@@ -5,6 +5,7 @@
 #include "./core/Window.h"
 #include "./core/Texture.h"
 #include "./core/Mesh.h"
+#include "./core/Model.h"
 #include "./math/lnal.h"
 
 #include <soloud/soloud.h>
@@ -19,7 +20,7 @@ int main()
     soloud.init();
     sample.load("./assets/sounds/Lucas_Scream.wav");
 
-    int handle = soloud.play(sample);
+    //int handle = soloud.play(sample);
 
     Window win("Spooky Game!!!!!", 1280, 720);
 
@@ -42,26 +43,31 @@ int main()
         std::cout << "Failed to load shader" << std::endl;
     }
 
+    Model shitter;
 
-    Vertex v1;
+    if(!shitter.load("./assets/model/Survival_BackPack_2.fbx"))
+        std::cout << "Failed to load model" << std::endl;
+
+
+    /*Vertex v1;
 
     v1.position = lnal::vec3(-0.5, -0.5, 0.0);
-    v1.color = lnal::vec3(1.0, 0.0, 1.0);
+    v1.normal = lnal::vec3(1.0, 0.0, 1.0);
     v1.tex_coords = lnal::vec2(0.0, 0.0);
 
     Vertex v2;
     v2.position = lnal::vec3(0.5, -0.5, 0.0);
-    v2.color = lnal::vec3(0.5, 0.3, 1.0);
+    v2.normal = lnal::vec3(0.5, 0.3, 1.0);
     v2.tex_coords = lnal::vec2(1.0, 0.0);
 
     Vertex v3;
-    v3.position = lnal::vec3(0.5, 0.5, 0.0);
-    v3.color = lnal::vec3(0.4, 1.0, 1.0);
+    v3.position = lnal::vec3(0.5, 1.0, 0.0);
+    v3.normal = lnal::vec3(0.4, 1.0, 1.0);
     v3.tex_coords = lnal::vec2(1.0, 1.0);
 
     Vertex v4;
     v4.position = lnal::vec3(-0.5, 0.5, 0.0);
-    v4.color = lnal::vec3(0.6, 0.6, 0.6);
+    v4.normal = lnal::vec3(0.6, 0.6, 0.6);
     v4.tex_coords = lnal::vec2(0.0, 1.0);
 
     std::vector<Vertex> vertice;
@@ -75,7 +81,7 @@ int main()
     std::vector<Texture> textures;
 
     Mesh m;
-    m.load(vertice, indice, textures);
+    m.load(vertice, indice, textures);*/
 
     float vertices[] = 
     {
@@ -91,6 +97,7 @@ int main()
         2, 3, 0
     };
 
+
     uint32_t vao, vbo, ebo;
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -101,6 +108,32 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    glBindVertexArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    uint32_t vao1, vbo1, ebo1;
+    glGenVertexArrays(1, &vao1);
+    glGenBuffers(1, &vbo1);
+    glGenBuffers(1, &ebo1);
+
+    glBindVertexArray(vao1);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo1);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo1);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -168,10 +201,17 @@ int main()
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         glBindVertexArray(0);
 
-        test.bind();
-        test.set_mat4fv("model", test_model.data());
+        s.set_mat4fv("model", test_model.data());
+
+        glBindVertexArray(vao1);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        glBindVertexArray(0);
+
+        /*test.bind();
+        test.set_mat4fv("model", model.data());
         test.set_mat4fv("projection", projection.data());
-        m.draw(test);
+        shitter.draw(test);*/
+        //m.draw(test);
 
         win.swap_buffers();
     }

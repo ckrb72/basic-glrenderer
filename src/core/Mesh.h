@@ -10,7 +10,7 @@
 struct Vertex
 {
     lnal::vec3 position;
-    lnal::vec3 color;
+    lnal::vec3 normal;
     lnal::vec2 tex_coords;
 };
 
@@ -20,9 +20,9 @@ private:
     std::vector<unsigned int> m_indices;
     std::vector<Vertex> m_vertices;
     std::vector<Texture> m_textures;
-    uint32_t m_gl_vertex_array, m_gl_vertex_buffer, m_gl_index_buffer;
+    uint32_t m_vao, m_vbo, m_ebo;
 
-    bool gpu_gen_mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices);
+    bool gpu_gen_mesh(const std::vector<Vertex>& vertices,const std::vector<unsigned int>& indices);
 
 public:
 

@@ -20,7 +20,7 @@ int main()
     soloud.init();
     sample.load("./assets/sounds/Lucas_Scream.wav");
 
-    //int handle = soloud.play(sample);
+    int handle = soloud.play(sample);
 
     Window win("Spooky Game!!!!!", 1280, 720);
 

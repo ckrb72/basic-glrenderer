@@ -4,15 +4,25 @@
 #include "./core/Shader.h"
 #include "./core/Window.h"
 #include "./core/Texture.h"
+#include "./core/Mesh.h"
+#include "./core/Model.h"
 #include "./math/lnal.h"
+
+#include <soloud/soloud.h>
+#include <soloud/soloud_wav.h>
 
 int main()
 {
-    Window win("Spooky Game!!!!!", 1280, 720);
 
-    /*(glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);*/
+    SoLoud::Soloud soloud;
+    SoLoud::Wav sample;
+
+    soloud.init();
+    sample.load("./assets/sounds/Lucas_Scream.wav");
+
+    //int handle = soloud.play(sample);
+
+    Window win("Spooky Game!!!!!", 1280, 720);
 
     Shader s;
     if(!s.load("./test.vert", "./test.frag"))
@@ -27,50 +37,20 @@ int main()
         std::cout << "Failed to load texture!" << std::endl;
     }
 
-    float vertices[] = 
+    Shader test;
+    if(!test.load("./default.vert", "./default.frag"))
     {
-        -0.5, -0.5, 0.0,   1.0, 0.0, 1.0,   0.0, 0.0,
-        0.5, -0.5, 0.0,    0.5, 0.3, 1.0,   1.0, 0.0,
-        0.5, 0.5, 0.0,     0.4, 1.0, 1.0,   1.0, 1.0,
-        -0.5, 0.5, 0.0,    0.6, 0.6, 0.6,   0.0, 1.0
-    };
+        std::cout << "Failed to load shader" << std::endl;
+    }
 
-    unsigned int indices[] = 
-    {
-        0, 1, 2,
-        2, 3, 0
-    };
+    Model backpack;
 
-    uint32_t vao, vbo, ebo;
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-    glGenBuffers(1, &ebo);
+    if(!backpack.load("./assets/model/jupiter.obj"))
+        std::cout << "Failed to load model" << std::endl;
 
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    glBindVertexArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     lnal::mat4 projection;
     lnal::gen_perspective_proj(projection, PI / 2, (float)(1280.0f/720.0f), 0.1, 10.0);
-
-    s.set_mat4fv("projection", projection.data());
 
     bool quit = false;
 
@@ -78,9 +58,14 @@ int main()
 
     lnal::vec3 axis(0.0, -1.0, 0.0);
 
-    s.set_int("container", 0);
+    /*s.set_int("container", 0);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, t.get_id());
+    glBindTexture(GL_TEXTURE_2D, t.get_id());*/
+
+    lnal::mat4 test_model(1.0);
+
+    lnal::scale(test_model, lnal::vec3(0.5, 0.5, 1.0));
+    lnal::translate_relative(test_model, lnal::vec3(0.5, 0.0, -2.0));
     
 
     while(!quit)
@@ -102,16 +87,16 @@ int main()
         glClearColor(0.3, 0.3, 0.3, 1.0);
 
         lnal::mat4 model(1.0);
+        lnal::scale(model, lnal::vec3(0.01, 0.01, 0.01));
         lnal::rotate(model, axis, angle);
-        lnal::translate_relative(model, lnal::vec3(0.0, 0.0, -3.0));
+        lnal::translate_relative(model, lnal::vec3(0.0, -1.0, -3.0));
 
         angle += 0.001;
 
-        s.bind();
-        s.set_mat4fv("model", model.data());
-
-        glBindVertexArray(vao);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        test.bind();
+        test.set_mat4fv("model", model.data());
+        test.set_mat4fv("projection", projection.data());
+        backpack.draw(test);
 
         win.swap_buffers();
     }

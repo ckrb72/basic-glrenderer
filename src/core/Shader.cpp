@@ -71,6 +71,7 @@ bool Shader::compile_shader(const std::string& vertex_source, const std::string&
     if(!success)
     {
         glGetShaderInfoLog(vertex_shader, MAX_LOG, nullptr, log);
+        std::cerr << "Vertex:" << std::endl;
         std::cerr << log << std::endl;
         glDeleteShader(vertex_shader);
         return false;
@@ -89,6 +90,7 @@ bool Shader::compile_shader(const std::string& vertex_source, const std::string&
     if(!success)
     {
         glGetShaderInfoLog(fragment_shader, MAX_LOG, nullptr, log);
+        std::cerr << "Fragment:" << std::endl;
         std::cerr << log << std::endl;
         glDeleteShader(vertex_shader);
         glDeleteShader(fragment_shader);
@@ -106,6 +108,7 @@ bool Shader::compile_shader(const std::string& vertex_source, const std::string&
     if(!success)
     {
         glGetProgramInfoLog(program, MAX_LOG, nullptr, log);
+        std::cerr << "Linker:" << std::endl;
         std::cerr << log << std::endl;
         glDetachShader(program, vertex_shader);
         glDetachShader(program, fragment_shader);

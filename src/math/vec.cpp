@@ -144,6 +144,17 @@ namespace lnal
         return &m_data[0];
     }
 
+    vec2::vec2(float x, float y)
+    {
+        m_data[0] = x;
+        m_data[1] = y;
+    }
+
+    float& vec2::operator[](int index)
+    {
+        return m_data[index];
+    }
+
 /* -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     Non-Member Function Definitions - 
 */  

@@ -20,11 +20,14 @@ private:
     std::vector<unsigned int> m_indices;
     std::vector<Vertex> m_vertices;
     std::vector<Texture> m_textures;
-    uint32_t m_vao, m_vbo, m_ebo;
 
     bool gpu_gen_mesh(const std::vector<Vertex>& vertices,const std::vector<unsigned int>& indices);
 
 public:
+
+    uint32_t m_vao;
+    uint32_t m_vbo;
+    uint32_t m_ebo;
 
     Mesh();
     ~Mesh();

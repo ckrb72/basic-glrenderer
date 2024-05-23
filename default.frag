@@ -2,10 +2,11 @@
 
 in vec3 f_normal;
 in vec2 f_tex;
+in vec4 f_color;
 
 out vec4 final_color;
 
 void main()
 {
-    final_color = vec4(1.0, 1.0, 1.0, 1.0);
+    final_color = f_color;
 }

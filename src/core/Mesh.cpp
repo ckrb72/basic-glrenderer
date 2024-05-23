@@ -3,7 +3,6 @@
 #include <iostream>
 
 Mesh::Mesh()
-:m_vao(0), m_vbo(0), m_ebo(0)
 {}
 
 
@@ -36,8 +35,6 @@ bool Mesh::load(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
     if(!gpu_gen_mesh(vertices, indices))
         return false;
 
-    std::cout << m_vao << std::endl;
-
     //If everything went well set member variables
     this->m_vertices = vertices;
     this->m_indices = indices;
@@ -49,23 +46,17 @@ bool Mesh::load(std::vector<Vertex> vertices, std::vector<unsigned int> indices,
 bool Mesh::gpu_gen_mesh(const std::vector<Vertex>& vertices,const std::vector<unsigned int>& indices)
 {
 
-    uint32_t vao, vbo, ebo;
+    glGenVertexArrays(1, &m_vao);
 
-    //Generate the buffers
-    glGenVertexArrays(1, &vao);
-    //std::cout << vao << std::endl;
+    glGenBuffers(1, &m_vbo);
+    glGenBuffers(1, &m_ebo);
 
-    glGenBuffers(1, &vbo);
-    //std::cout << vbo << std::endl;
-    glGenBuffers(1, &ebo);
-    //std::cout << ebo << std::endl;
+    glBindVertexArray(m_vao);
 
-    glBindVertexArray(vao);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));

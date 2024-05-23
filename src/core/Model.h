@@ -13,11 +13,11 @@
 class Model
 {
 private:
-    std::vector<Mesh> m_meshes;
+    std::vector<std::unique_ptr<Mesh>> m_meshes;
     lnal::mat4 model;
 
-    void processNode(aiNode* node, const aiScene* scene);
-    Mesh processMesh(aiMesh* mesh, const aiScene* scene);
+    bool processNode(aiNode* node, const aiScene* scene);
+    std::unique_ptr<Mesh> processMesh(aiMesh* mesh, const aiScene* scene);
 
 
 public: 

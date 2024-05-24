@@ -62,7 +62,7 @@ namespace lnal
         //Returns the length of the vector squared
         float len_sqr();
 
-        const float* data() const;
+        float* data();
 
     };
 
@@ -113,7 +113,7 @@ namespace lnal
         //Returns the length of the vector squared
         float len_sqr();
 
-        const float* data() const;
+        float* data() const;
 
     };
 
@@ -149,6 +149,7 @@ namespace lnal
         friend void translate_relative(mat4& A, const vec3& vec);
         friend void translate_absolute(mat4& A, const vec3& vec);
         friend void scale(mat4& A, const vec3& vec);
+        friend void scale(mat4& A, float scalar);
         friend void rotation_matrix(mat4& A, vec3& axis, float angle);
 
         //Returns a pointer to the first element of the internal array
@@ -168,6 +169,8 @@ namespace lnal
     void translate_absolute(mat4& A, const vec3& vec);
     
     void scale(mat4& A, const vec3& vec);
+
+    void scale(mat4& A, float scalar);
     
     void rotation_matrix(mat4& A, vec3& axis, float angle);
     

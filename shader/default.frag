@@ -8,5 +8,5 @@ out vec4 final_color;
 
 void main()
 {
-    final_color = f_color;
+    final_color = vec4(f_normal, 1.0);
 }

@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 Camera::Camera()
-:m_projection(1.0), m_view(1.0)
+:m_projection(1.0), m_view(1.0), m_position(0.0, 0.0, 0.0)
 {}
 
 Camera::~Camera()
@@ -9,6 +9,8 @@ Camera::~Camera()
 
 void Camera::lookat(lnal::vec3 cam_pos, lnal::vec3 cam_lookat, lnal::vec3 temp_up)
 {
+    m_position = cam_pos;
+    
     lnal::lookat(m_view, cam_pos, cam_lookat, temp_up);
 }
 
@@ -30,4 +32,9 @@ float* Camera::get_projection()
 float* Camera::get_view()
 {
     return m_view.data();
+}
+
+float* Camera::get_position()
+{
+    return m_position.data();
 }

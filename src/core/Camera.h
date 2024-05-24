@@ -6,6 +6,7 @@ class Camera
 private:
     lnal::mat4 m_projection;
     lnal::mat4 m_view;
+    lnal::vec3 m_position;
 
 public:
 
@@ -19,4 +20,5 @@ public:
     
     float* get_projection();
     float* get_view();
+    float* get_position();
 };

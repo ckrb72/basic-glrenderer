@@ -7,6 +7,7 @@
 #include "./core/Mesh.h"
 #include "./core/Model.h"
 #include "./math/lnal.h"
+#include "./core/Camera.h"
 
 #include <soloud/soloud.h>
 #include <soloud/soloud_wav.h>
@@ -20,12 +21,10 @@ int main()
     soloud.init();
     sample.load("./assets/sounds/Lucas_Scream.wav");
 
-    //int handle = soloud.play(sample);
-
     Window win("Spooky Game!!!!!", 1280, 720);
 
     Shader s;
-    if(!s.load("./test.vert", "./test.frag"))
+    if(!s.load("./shader/test.vert", "./shader/test.frag"))
     {
         std::cout << "Failed to load shader" << std::endl;
     }
@@ -38,7 +37,7 @@ int main()
     }
 
     Shader test;
-    if(!test.load("./default.vert", "./default.frag"))
+    if(!test.load("./shader/default.vert", "./shader/default.frag"))
     {
         std::cout << "Failed to load shader" << std::endl;
     }
@@ -49,8 +48,8 @@ int main()
         std::cout << "Failed to load model" << std::endl;
 
 
-    lnal::mat4 projection;
-    lnal::gen_perspective_proj(projection, PI / 2, (float)(1280.0f/720.0f), 0.1, 10.0);
+    Camera camera;
+    camera.gen_perspective(PI / 2, (float)(1280.0f / 720.0f), 0.1, 10.0);
 
     bool quit = false;
 
@@ -66,7 +65,10 @@ int main()
 
     lnal::scale(test_model, lnal::vec3(0.5, 0.5, 1.0));
     lnal::translate_relative(test_model, lnal::vec3(0.5, 0.0, -2.0));
-    
+
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);    
+
+    //int handle = soloud.play(sample);
 
     while(!quit)
     {
@@ -95,7 +97,8 @@ int main()
 
         test.bind();
         test.set_mat4fv("model", model.data());
-        test.set_mat4fv("projection", projection.data());
+        test.set_mat4fv("view", camera.get_view());
+        test.set_mat4fv("projection", camera.get_projection());
         backpack.draw(test);
 
         win.swap_buffers();

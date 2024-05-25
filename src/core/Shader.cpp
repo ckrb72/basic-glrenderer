@@ -199,6 +199,15 @@ void Shader::set_int(const std::string& name, int i)
     glUniform1i(m_uniforms[name], i);
 }
 
+void Shader::set_float(const std::string& name, float f)
+{
+    bind();
+    if(m_uniforms.count(name) == 0)
+        m_uniforms[name] = glGetUniformLocation(m_id, name.c_str());
+    
+    glUniform1f(m_uniforms[name], f);
+}
+
 uint32_t Shader::get_id()
 {
     return m_id;

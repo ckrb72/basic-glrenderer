@@ -1,6 +1,7 @@
 #include "Window.h"
 #include <stdexcept>
 #include <graphics.h>
+#include <iostream>
 
 
 Window::Window(const std::string& title, uint32_t width, uint32_t height)
@@ -23,7 +24,7 @@ Window::Window(const std::string& title, uint32_t width, uint32_t height)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
 
     SDL_GL_CreateContext(m_window);
 
@@ -39,11 +40,13 @@ Window::Window(const std::string& title, uint32_t width, uint32_t height)
 
     //Set up various OpenGL functionality
     glEnable(GL_DEPTH_TEST);
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glEnable(GL_MULTISAMPLE);
 
-    /*(glEnable(GL_CULL_FACE);
+    /*glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);*/
 }

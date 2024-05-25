@@ -110,8 +110,6 @@ std::unique_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
             vertex.tex_coords = lnal::vec2(0.0, 0.0);
         }
 
-        vertex.tex_coords = lnal::vec2(0.0, 0.0);
-
         vertices.push_back(vertex);
     }
 

@@ -90,6 +90,16 @@ int main()
                 default:
                     break;
             }
+            
+            //SDL2 keyboard input handling
+            switch (event.key.keysym.sym)
+            {
+                case SDLK_ESCAPE:
+                    quit = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         camera.lookat(lnal::vec3(0.0, 0.0, 3.0), lnal::vec3(0.0, 0.0, 0.0), lnal::vec3(0.0, 1.0, 0.0));

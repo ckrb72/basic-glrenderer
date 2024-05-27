@@ -6,7 +6,6 @@
 #include <assimp/postprocess.h>
 
 #include <iostream>
-#include <memory>
 
 
 Model::Model()

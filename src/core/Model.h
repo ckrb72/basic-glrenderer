@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include "Mesh.h"
 #include "Shader.h"
 #include "../math/lnal.h"
@@ -7,6 +6,9 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
+#include <vector>
+#include <memory>
 
 //Model is wrapper around Mesh.
 //Can have multiple Meshes in a single model

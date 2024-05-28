@@ -8,15 +8,17 @@
 #include "./core/Model.h"
 #include "./math/lnal.h"
 #include "./core/Camera.h"
+#include "./core/audio.h"
 
-#include <soloud/soloud.h>
-#include <soloud/soloud_wav.h>
+#include <thread>
 
 lnal::vec3 lightpos(1.0, 1.0, 1.0);
 
 int main()
 {
 
+
+    //Init engine
     SoLoud::Soloud soloud;
     SoLoud::Wav sample;
 
@@ -25,6 +27,7 @@ int main()
 
     Window win("Spooky Game!!!!!", 1280, 720);
 
+    //Load shaders and models (possibly on separate thread while showing splash)
     Shader s;
     if(!s.load("./shader/test.vert", "./shader/test.frag"))
     {
@@ -73,18 +76,15 @@ int main()
     lnal::vec3 axis(0.0, -1.0, 0.0);
     lnal::vec3 rotation_axis(1.0, 0.0, 1.0);
 
-    /*s.set_int("container", 0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, t.get_id());*/
-
-
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);    
 
     //int handle = soloud.play(sample);
 
-
+    //Main loop
     while(!quit)
     {
+
+        //Handle input
         SDL_Event event;
         while(SDL_PollEvent(&event))
         {
@@ -98,6 +98,10 @@ int main()
             }
         }
 
+        //Physics / Game logic
+
+
+        //Render
         camera.lookat(lnal::vec3(0.0, 0.0, 3.0), lnal::vec3(0.0, 0.0, 0.0), lnal::vec3(0.0, 1.0, 0.0));
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -16,7 +16,6 @@ class Model
 {
 private:
     std::vector<std::unique_ptr<Mesh>> m_meshes;
-    lnal::mat4 model;
 
     bool processNode(aiNode* node, const aiScene* scene);
     std::unique_ptr<Mesh> processMesh(aiMesh* mesh, const aiScene* scene);

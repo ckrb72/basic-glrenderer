@@ -5,12 +5,11 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <iostream>
+#include "../debug.h"
 
 
 Model::Model()
 {}
-
 
 Model::~Model()
 {}
@@ -19,7 +18,6 @@ void Model::draw(Shader& shader)
 {
     for(uint32_t i = 0; i < m_meshes.size(); i++)
     {
-        //std::cout << "Drawing Mesh" << std::endl;
         m_meshes[i]->draw(shader);
     }
 }
@@ -35,10 +33,10 @@ bool Model::load(const std::string& filepath)
 
     if(!scene)
     {
-        //TODO: Added error_log function for debug purposes
-        //error_log("Failed to load model");
+        error_log("Failed to load model");
         return false;
     }
+    dbglog("Model loaded...");
 
 
     processNode(scene->mRootNode, scene);
@@ -56,9 +54,12 @@ bool Model::processNode(aiNode* node, const aiScene* scene)
         std::unique_ptr<Mesh> m = processMesh(mesh, scene);
 
         if(m == nullptr)
+        {
+            dbglog("Failed to process mesh");
             return false;
-
-        m_meshes.push_back(processMesh(mesh, scene));
+        }
+        
+        m_meshes.push_back(std::move(m));
     }
 
     for(uint32_t i = 0; i < node->mNumChildren; i++)
@@ -89,7 +90,6 @@ std::unique_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
         vector[2] = mesh->mVertices[i].z;
 
         vertex.position = vector;
-
 
         vector[0] = mesh->mNormals[i].x;
         vector[1] = mesh->mNormals[i].y;

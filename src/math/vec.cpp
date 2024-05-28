@@ -139,7 +139,7 @@ namespace lnal
         std::cout << "< " << m_data[0] << ", " << m_data[1] << ", " << m_data[2] << " >" << std::endl;
     }
 
-    const float* vec3::data() const
+    float* vec3::data()
     {
         return &m_data[0];
     }

@@ -393,6 +393,13 @@ namespace lnal
         A.m_data[2][2] *= vec[2];
     }
 
+    void scale(mat4& A, float scalar)
+    {
+        A.m_data[0][0] *= scalar;
+        A.m_data[1][1] *= scalar;
+        A.m_data[2][2] *= scalar;
+    }
+
     //Encodes a rotation of specified radians about the axis specified into A
     //@param A matrix to rotate
     //@param axis arbitrary axis to rotate around

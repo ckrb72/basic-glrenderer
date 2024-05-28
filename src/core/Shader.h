@@ -26,6 +26,7 @@ public:
     //TODO:Change this declaration to use lnal
     void set_vec3fv(const std::string& name, float* vec);
     void set_int(const std::string& name, int i);
+    void set_float(const std::string& name, float f);
 
     void bind();
     void unbind();

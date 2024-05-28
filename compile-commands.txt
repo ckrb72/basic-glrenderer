@@ -1,5 +1,5 @@
  Windows:
- g++ src/*.cpp src/core/*.cpp src/math/*.cpp src/*.c -DDEBUG -o main -I ./dependencies/include -L ./dependencies/lib -lmingw32 -lSDL2main -lSDL2 -lassimp -std=c++2a -lsoloud_static -lwinmm
+ g++ src/*.cpp src/core/*.cpp src/math/*.cpp src/*.c -DDEBUG -o main -I ./dependencies/include -L ./dependencies/lib -lmingw32 -lSDL2main -lSDL2 -lassimp -lsoloud_static -lwinmm -std=c++2a
 
 Mac:
 g++ src/*.cpp src/*.c src/core/*.cpp src/math/*.cpp -I ./dependencies/include -I /Library/Frameworks/SDL2.framework/Version/A/Headers -F /Library/Frameworks -framework SDL2 -framework OpenGL -rpath "@loader_path/dependencies/lib" -L ./dependencies/lib -lassimp -lsoloud_static_mac -framework AudioToolbox -std=c++2a -Wno-deprecated -o main

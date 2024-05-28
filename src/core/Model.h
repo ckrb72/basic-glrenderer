@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "../math/lnal.h"
+#include <memory>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

@@ -5,7 +5,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../debug.h"
+#include <debug.h>
 
 
 Model::Model()

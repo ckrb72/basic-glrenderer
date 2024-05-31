@@ -18,6 +18,8 @@ public:
 
     ~Window();
 
+    void clear();
+
     void swap_buffers();
 
     

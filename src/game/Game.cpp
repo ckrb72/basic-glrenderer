@@ -7,7 +7,7 @@
 #include <iostream>
 #include <graphics.h>
 
-static uint32_t gpu_gen_square();
+static uint64_t previous_ticks = 0;
 
 Game::Game(const std::string& name, uint32_t width, uint32_t height)
 :m_window(name, width, height), m_width(width), m_height(height)
@@ -69,11 +69,17 @@ void Game::show_splash()
     uint32_t x = 0;
 
     //Actually play the sound
-    int handle = m_audio_manager.play(boom);
+    //int handle = m_audio_manager.play(boom);
+
+    previous_ticks = SDL_GetTicks64();
+
+    float time = 0;
 
     //Play frames of spritesheet
     while(!sheet_done && !m_quit)
     {
+        update_time();
+
         //Handle basic input so window doesn't crash
         SDL_Event event;
         while(SDL_PollEvent(&event))
@@ -90,7 +96,13 @@ void Game::show_splash()
 
         splash_mesh.set_clip(x, 0);
 
-        x += 256;
+        if(time >= 0.1)
+        {
+            x += 256;
+            time = 0.0;
+        }
+
+        time += delta_time;
 
         x %= 4096;
 
@@ -103,4 +115,12 @@ void Game::show_splash()
         m_window.swap_buffers();
     }
 
+}
+
+void Game::update_time()
+{
+    uint64_t current_ticks = SDL_GetTicks64();
+
+    delta_time = (float)(current_ticks - previous_ticks) * 0.001;
+    previous_ticks = current_ticks;
 }

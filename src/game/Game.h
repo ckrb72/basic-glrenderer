@@ -13,6 +13,8 @@ private:
     uint32_t m_width;
     uint32_t m_height;
 
+    float delta_time;
+
     EntityManager m_entity_manager;
     Window m_window;
     Camera m_camera;
@@ -24,6 +26,7 @@ private:
     bool m_quit = false;
 
     void show_splash();
+    void update_time();
     
 public:
     Game(const std::string& name, uint32_t width, uint32_t height);

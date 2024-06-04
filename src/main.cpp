@@ -1,7 +1,7 @@
 #include <graphics.h>
 #include <iostream>
 
-#include "./core/Shader.h"
+/*#include "./core/Shader.h"
 #include "./core/Window.h"
 #include "./core/Texture.h"
 #include "./core/Mesh.h"
@@ -9,10 +9,12 @@
 #include "./math/lnal.h"
 #include "./core/Camera.h"
 #include "./core/audio.h"
+#include "./game/Game.h"*/
+
+
+#include "./math/lnal.h"
 #include "./game/Game.h"
 
-
-#include <thread>
 
 lnal::vec3 lightpos(1.0, 1.0, 1.0);
 

@@ -3,11 +3,10 @@
 #include "../core/Mesh.h"
 #include <debug.h>
 #include "../core/SpriteSheet.h"
+#include "../core/engine_time.h"
 
 #include <iostream>
 #include <graphics.h>
-
-static uint64_t previous_ticks = 0;
 
 Game::Game(const std::string& name, uint32_t width, uint32_t height)
 :m_window(name, width, height), m_width(width), m_height(height)
@@ -15,23 +14,38 @@ Game::Game(const std::string& name, uint32_t width, uint32_t height)
     //Start audio manager (will eventually put this in a wrapper class and put in initializer list)
     m_audio_manager.init();
 
-    m_camera.gen_perspective(PI / 2, (float)((float)m_width / (float)m_height), 0.1, 10.0);
+    //Set up input devices
 
-    run();
+    //Generate camera projection matrix
+    m_camera.gen_perspective(PI / 2, (float)((float)m_width / (float)m_height), 0.1, 10.0);
 }
 
 Game::~Game()
 {
-
+    m_audio_manager.deinit();
 }
 
 void Game::run()
 {
+    update_time();
     show_splash();
     
     while(!m_quit)
     {
-        //Do stuff...
+        //Update Delta Time
+        update_time();
+
+        //Handle Input
+        handle_events();
+
+        //Do game stuff like rendering, physics, game logic
+
+
+        //game_logic();
+
+
+        render();
+
     }
 }
 
@@ -62,6 +76,7 @@ void Game::show_splash()
 
     splash_shader.set_mat4fv("model", model.data());
     splash_shader.set_mat4fv("projection", m_camera.get_projection());
+    splash_shader.set_mat4fv("view", m_camera.get_view());
     splash_shader.set_int("sprite_sheet", 0);
 
     splash_mesh.set_size(256, 256);
@@ -71,8 +86,6 @@ void Game::show_splash()
     //Actually play the sound
     //int handle = m_audio_manager.play(boom);
 
-    previous_ticks = SDL_GetTicks64();
-
     float time = 0;
 
     //Play frames of spritesheet
@@ -80,19 +93,8 @@ void Game::show_splash()
     {
         update_time();
 
-        //Handle basic input so window doesn't crash
-        SDL_Event event;
-        while(SDL_PollEvent(&event))
-        {
-            switch(event.type)
-            {
-                case SDL_QUIT:
-                    m_quit = true;
-                    break;
-                default:
-                    break;
-            }
-        }
+        //Handle basic events so window doesn't crash
+        handle_events();
 
         splash_mesh.set_clip(x, 0);
 
@@ -104,23 +106,55 @@ void Game::show_splash()
 
         time += delta_time;
 
-        x %= 4096;
-
         m_window.clear();
 
         //Draw frames
         splash_mesh.draw();
 
-
         m_window.swap_buffers();
-    }
 
+        if(x == 4096)
+            sheet_done = true;
+    }
 }
 
 void Game::update_time()
 {
-    uint64_t current_ticks = SDL_GetTicks64();
+   delta_time = calc_delta();
+}
 
-    delta_time = (float)(current_ticks - previous_ticks) * 0.001;
-    previous_ticks = current_ticks;
+
+
+void Game::handle_events()
+{
+    SDL_Event event;
+    while(SDL_PollEvent(&event))
+    {
+        switch(event.type)
+        {
+            case SDL_QUIT:
+                m_quit = true;
+                break;
+            default:
+                break;
+        }
+    }
+
+    const uint8_t* keyboard_state = SDL_GetKeyboardState(nullptr);
+
+    uint8_t w = keyboard_state[SDL_GetScancodeFromName("w")];
+
+
+}
+
+void Game::render()
+{
+    m_window.clear();
+    
+    
+    //Go through entity manager and draw everything in there...
+    //Or maybe have a pool somewhere that holds all things we want to draw...
+
+
+    m_window.swap_buffers();
 }

@@ -20,5 +20,5 @@ public:
     
     float* get_projection();
     float* get_view();
-    float* get_position();
+    lnal::vec3 get_position();
 };

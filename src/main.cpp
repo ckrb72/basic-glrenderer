@@ -1,7 +1,7 @@
 #include <graphics.h>
 #include <iostream>
 
-#include "./core/Shader.h"
+/*#include "./core/Shader.h"
 #include "./core/Window.h"
 #include "./core/Texture.h"
 #include "./core/Mesh.h"
@@ -9,17 +9,23 @@
 #include "./math/lnal.h"
 #include "./core/Camera.h"
 #include "./core/audio.h"
+#include "./game/Game.h"*/
 
-#include <thread>
+
+#include "./math/lnal.h"
+#include "./game/Game.h"
+
 
 lnal::vec3 lightpos(1.0, 1.0, 1.0);
 
 int main()
 {
 
+    Game game("Shitter", 1280, 720);
+    game.run();
 
     //Init engine
-    SoLoud::Soloud soloud;
+    /*SoLoud::Soloud soloud;
     SoLoud::Wav sample;
 
     soloud.init();
@@ -80,6 +86,8 @@ int main()
 
     //int handle = soloud.play(sample);
 
+    float x = 0.0;
+
     //Main loop
     while(!quit)
     {
@@ -102,7 +110,7 @@ int main()
 
 
         //Render
-        camera.lookat(lnal::vec3(0.0, 0.0, 3.0), lnal::vec3(0.0, 0.0, 0.0), lnal::vec3(0.0, 1.0, 0.0));
+        camera.lookat(lnal::vec3(0.0, 0.0, 3.0), lnal::vec3(x, 0.0, 0.0), lnal::vec3(0.0, 1.0, 0.0));
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(0.3, 0.3, 0.3, 1.0);
@@ -186,7 +194,7 @@ int main()
         cube.draw(diffuse_map);
 
         win.swap_buffers();
-    }
+    }*/
 
     return 0;
 }

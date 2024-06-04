@@ -34,7 +34,7 @@ float* Camera::get_view()
     return m_view.data();
 }
 
-float* Camera::get_position()
+lnal::vec3 Camera::get_position()
 {
-    return m_position.data();
+    return m_position;
 }

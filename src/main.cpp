@@ -21,7 +21,7 @@ lnal::vec3 lightpos(1.0, 1.0, 1.0);
 int main()
 {
 
-    Game game("Shitter", 1280, 720);
+    Game game("SPOKERJYKER GAMKERJKL", 1280, 720);
     game.run();
 
     //Init engine

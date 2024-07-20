@@ -130,16 +130,16 @@ int main()
 
         lnal::vec3 lightambient(0.2, 0.2, 0.2);
         lnal::vec3 lightdiffuse(1.0, 1.0, 1.0);
-        lnal::vec3 lightspecular(0.7, 0.7, 0.7);
+        lnal::vec3 lightspecular(0.7, 0.7, 0.7);*/
 
-        test.bind();
+        /*test.bind();
         test.set_mat4fv("model", model.data());
         test.set_mat4fv("view", camera.get_view());
         test.set_mat4fv("projection", camera.get_projection());
 
         //Will eventually get rid of light_color
         test.set_vec3fv("light_color", lightcolor.data());
-        test.set_vec3fv("cam_pos", camera.get_position());
+        test.set_vec3fv("cam_pos", &(camera.get_position())[0]);
         test.set_vec3fv("material.ambient", ambient.data());
         test.set_vec3fv("material.diffuse", diffuse.data());
         test.set_vec3fv("material.specular", specular.data());
@@ -148,19 +148,19 @@ int main()
         test.set_vec3fv("light.ambient", lightambient.data());
         test.set_vec3fv("light.diffuse", lightdiffuse.data());
         test.set_vec3fv("light.specular", lightspecular.data());
-        jupiter.draw(test);
+        jupiter.draw(test);*/
 
 
-        lnal::mat4 different_model(1.0);
+        /*lnal::mat4 different_model(1.0);
         lnal::scale(different_model, 0.2);
         lnal::rotate(different_model, rotation_axis, angle);
         lnal::translate_relative(different_model, lnal::vec3(2.0, 0.0, 0.0));
 
         test.set_mat4fv("model", different_model.data());
-        backpack.draw(test);
+        backpack.draw(test);*/
 
 
-        lnal::mat4 cube_model(1.0);
+        /*lnal::mat4 cube_model(1.0);
         lnal::scale(cube_model, 0.3);
         lnal::rotate(cube_model, rotation_axis, -angle);
         lnal::translate_relative(cube_model, lnal::vec3(-1.0, 0.0, 0.0));
@@ -171,7 +171,7 @@ int main()
 
         //Will eventually get rid of light_color
         diffuse_map.set_vec3fv("light_color", lightcolor.data());
-        diffuse_map.set_vec3fv("cam_pos", camera.get_position());
+        diffuse_map.set_vec3fv("cam_pos", &(camera.get_position())[0]);
         diffuse_map.set_vec3fv("material.ambient", ambient.data());
         diffuse_map.set_vec3fv("material.diffuse", diffuse.data());
         //diffuse_map.set_vec3fv("material.specular", specular.data());

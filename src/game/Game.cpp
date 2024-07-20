@@ -8,6 +8,16 @@
 #include <iostream>
 #include <graphics.h>
 
+
+//Would put these in an array or something of objects to render with all the stuff needed but for now this is just a hack to see if this works
+static float angle = 0;
+
+static lnal::vec3 axis(0.0, -1.0, 0.0);
+static lnal::vec3 rotation_axis(1.0, 0.0, 1.0);
+
+static Shader default_shader;
+static Model jupiter;
+
 Game::Game(const std::string& name, uint32_t width, uint32_t height)
 :m_window(name, width, height), m_width(width), m_height(height)
 {
@@ -29,7 +39,15 @@ void Game::run()
 {
     update_time();
     show_splash();
-    
+
+    if(!jupiter.load("./assets/model/jupiter.obj"))
+        std::cout << "Failed to load jupiter model" << std::endl;
+
+    if(!default_shader.load("./shader/default.vert", "./shader/default.frag"))
+    {
+        std::cout << "Failed to load shader" << std::endl;
+    }
+
     while(!m_quit)
     {
         //Update Delta Time
@@ -40,10 +58,7 @@ void Game::run()
 
         //Do game stuff like rendering, physics, game logic
 
-
         //game_logic();
-
-
         render();
 
     }
@@ -154,7 +169,21 @@ void Game::render()
     
     //Go through entity manager and draw everything in there...
     //Or maybe have a pool somewhere that holds all things we want to draw...
+    m_camera.lookat(lnal::vec3(0.0, 0.0, 3.0), lnal::vec3(0.0, 0.0, 0.0), lnal::vec3(0.0, 1.0, 0.0));
 
+
+    lnal::mat4 model(1.0);
+    lnal::scale(model, 0.01);
+    lnal::rotate(model, axis, angle);
+    lnal::translate_relative(model, lnal::vec3(0.0, -1.0, -2.0));
+
+    default_shader.set_mat4fv("model", model.data());
+    default_shader.set_mat4fv("view", m_camera.get_view());
+    default_shader.set_mat4fv("projection", m_camera.get_projection());
+
+    angle += 0.001;
+
+    jupiter.draw(default_shader);
 
     m_window.swap_buffers();
 }

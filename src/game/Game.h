@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <string>
-#include "EntityManager.h"
+#include <map>
 #include "../core/audio.h"
 #include "../core/Camera.h"
 #include "../core/Window.h"
@@ -9,18 +9,19 @@
 #include "Scene.h"
 
 
+/*
+    Need to add audio
+*/
+
 class Game
 {
 private:
+
+
     uint32_t m_width;
     uint32_t m_height;
     float delta_time;
     bool m_quit = false;
-
-    //Need to think about if I want to use pointers and what kind to use (unique, shared, raw!!!!, etc.)
-    std::vector<std::shared_ptr<Scene>> m_scenes;
-
-    EntityManager m_entity_manager;
 
     //Handles input and events (i.e. keyboard and mouse inputs and windows events)
     EventManager m_event_manager;
@@ -28,8 +29,18 @@ private:
     Window m_window;
     Camera m_camera;
 
-    //AudioManager m_audio_manager;
-    SoLoud::Soloud m_audio_manager;
+    Scene* m_current_scene;
+
+    //This should not use raw scene pointers since we want the scenes to destruct once they are deleted from this
+    //Shared pointers are probably the best but I don't know how this affect polymorphism in c++
+    std::map<std::string, std::shared_ptr<Scene>> m_scenes; 
+
+
+
+
+
+
+
 
 
     //These functions are now going to be in the individual scene but if I change this right
@@ -59,4 +70,10 @@ public:
     ~Game();
 
     void run();
+
+    void change_scene(Scene* scene);
+
+    Camera& get_camera();
+
+    Window& get_window();
 };

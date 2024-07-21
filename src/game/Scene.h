@@ -17,13 +17,17 @@ class Scene
 {
 private:
 
-//Might want an individual entity manager for each scene but for now will just have a vector of renderables
-//This vector will hold references to renderables that we can the render in the render() method
-// TODO: Also want this vector to hold an entity, not just a model so there can be physics objects and stuff too but for now this is fine
-std::vector<std::shared_ptr<Model>> m_entities;
+    // Might want an individual entity manager for each scene but for now will just have a vector of renderables
+    // This vector will hold references to renderables that we can the render in the render() method
+    // TODO: Also want this vector to hold an entity, not just a model so there can be physics objects and stuff too but for now this is fine
+    std::vector<std::shared_ptr<Model>> m_entities;
 
 
-std::shared_ptr<Camera> m_camera;
+    std::shared_ptr<Camera> m_camera;
+
+    // Fine keeping this a raw pointer because we will never destruct a game object
+    // in a scene class (since a scene is always contained in a game)
+    //Game* m_game;
 
 
 public:
@@ -38,10 +42,6 @@ public:
     void set_delta(float delta);
 
 
-    //Render function will stay mostly the same for any derived classes (If we do need to override this then I'll change it later)
-    void render();
-
-
     //NOTE: Use of virtual functions below
     // Virtual functions are c++'s way of acheivieving runtime ploymorphism.
     // They are essentially function pointers (sort of) with some syntactic sugar
@@ -52,20 +52,24 @@ public:
     // Just remember, whenever you see a virtual function, it allows you to override it in derived classes.
     // Same idea as virtual memory if you know what that is.
 
+    // This will be changable on per scene basis
+    // Runs each frame
+    virtual void render() = 0;
+
     // This will be changeable on per scene basis
     // Runs at startup (sort of like constructor)
-    virtual void start();
+    virtual void start() = 0;
 
     // This will be changable on per scene basis
     // Runs each frame
-    virtual void update();
+    virtual void update() = 0;
 
     // This will be changeable on per scene basis
     // Runs each frame
-    virtual void handle_events();
+    virtual void handle_events() = 0;
 
 
     // This probably shouldn't be changeable per scene but will do that anyway.
     // Runs each froms
-    virtual void handle_physics();
+    virtual void handle_physics() = 0;
 };

@@ -22,7 +22,6 @@ Game::Game(const std::string& name, uint32_t width, uint32_t height)
 :m_window(name, width, height), m_width(width), m_height(height)
 {
     //Start audio manager (will eventually put this in a wrapper class and put in initializer list)
-    m_audio_manager.init();
 
     //Set up input devices
 
@@ -37,7 +36,7 @@ Game::Game(const std::string& name, uint32_t width, uint32_t height)
 
 Game::~Game()
 {
-    m_audio_manager.deinit();
+
 }
 
 void Game::run()

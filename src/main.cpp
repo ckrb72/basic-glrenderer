@@ -18,6 +18,20 @@
 
 lnal::vec3 lightpos(1.0, 1.0, 1.0);
 
+
+
+
+// IDEA FOR ARCHITECTURE OF REST OF ENGINE / GAME
+// Games will be split into scenes. One scene will be rendered at a time and will play until a different scene is played.
+// Main game class will handle scene management but individual scenes will decide what to do with their own input / physics / rendering / whatever.
+// This way you can heavily change what happens in each scene. 
+// This will stay in common between scenes (such as camera) but can manipulate those things however you want (can change camera position, fov, projection, etc.)
+// Examples of scenes: splash screen, main menu, game level, etc.
+// This way, the game programmer can just worry about programming each scene and then decide when to change them out (perhaps with an event system or something)
+// I just have to decide if I want to use OOP heavily with this. Like each new scene would be a derived class of the base Scene class and you would override the basic functions like render, update, etc.
+// But this leaves a bad taste in my mouth because I still don't like OOP that much and you would have a lot of extra classes. This does seem like the easiest way though so I might just do that.
+// Delta time will be another thing that is going to be an engine wide thing, since that should be a black box and the user (game programmer) shouldn't mess with it.
+
 int main()
 {
 

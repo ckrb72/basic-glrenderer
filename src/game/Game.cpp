@@ -26,6 +26,11 @@ Game::Game(const std::string& name, uint32_t width, uint32_t height)
 
     //Set up input devices
 
+
+    //Set up scenes
+    //scene.create.and.stuff()
+    //m_scenes.push_back(&scene)
+
     //Generate camera projection matrix
     m_camera.gen_perspective(PI / 2, (float)((float)m_width / (float)m_height), 0.1, 10.0);
 }
@@ -37,7 +42,30 @@ Game::~Game()
 
 void Game::run()
 {
+
+/*
+
+    For final engine would have a pointer to the scene class and do the following
+
+    while(!m_quit)
+    {
+
+        if(scene_change_event)
+        {
+            change_scene(&new_scene);
+        }
+
+        scene->update_time();
+        scene->handle_events();
+        scene->update_physics();
+        scene->render();
+    }
+
+*/
+
+
     update_time();
+
     show_splash();
 
     if(!jupiter.load("./assets/model/jupiter.obj"))
@@ -150,6 +178,11 @@ void Game::handle_events()
             case SDL_QUIT:
                 m_quit = true;
                 break;
+
+            case SDL_MOUSEMOTION:
+                std::cout << "Mouse moved" << std::endl;
+                break;
+                
             default:
                 break;
         }
@@ -158,6 +191,19 @@ void Game::handle_events()
     const uint8_t* keyboard_state = SDL_GetKeyboardState(nullptr);
 
     uint8_t w = keyboard_state[SDL_GetScancodeFromName("w")];
+
+    if(w)
+    {
+        std::cout << "Key Pressed" << std::endl;
+    }
+
+
+    uint8_t esc = keyboard_state[SDL_GetScancodeFromName("escape")];
+
+    if(esc)
+    {
+        m_quit = true;
+    }
 
 
 }
@@ -169,6 +215,7 @@ void Game::render()
     
     //Go through entity manager and draw everything in there...
     //Or maybe have a pool somewhere that holds all things we want to draw...
+    //i.e. m_entity_manager.draw    or      m_render_pool.draw
     m_camera.lookat(lnal::vec3(0.0, 0.0, 3.0), lnal::vec3(0.0, 0.0, 0.0), lnal::vec3(0.0, 1.0, 0.0));
 
 
@@ -187,3 +234,6 @@ void Game::render()
 
     m_window.swap_buffers();
 }
+
+
+//in input handling make a function or something that updates camera position based on the mouse movement

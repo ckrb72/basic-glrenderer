@@ -4,9 +4,12 @@
 #include "../core/engine_time.h"
 
 #include "./scenes/ScSplash.h"
+#include "./scenes/ScStatue.h"
 
 #include <iostream>
 
+float elapsed_time = 0.0;
+bool scene_switched = false;
 
 Game::Game(const std::string& name, uint32_t width, uint32_t height)
 :m_window(name, width, height)
@@ -18,6 +21,8 @@ Game::Game(const std::string& name, uint32_t width, uint32_t height)
     //Set up scenes
     std::shared_ptr<Scene> splashscreen = std::make_shared<ScSplash>();
     m_scenes["splash"] = splashscreen;
+
+    m_scenes["jupiter_bust"] = std::make_shared<ScStatue>();
 
     //Generate camera projection matrix
     m_camera.gen_perspective(PI / 2, (float)((float)width / (float)height), 0.1, 10.0);
@@ -56,6 +61,13 @@ void Game::run()
 */
     while(!m_quit)
     {
+
+        if(elapsed_time >= 3.0 && !scene_switched)
+        {
+            change_scene("jupiter_bust");
+            scene_switched = true;
+        }
+
         //Update Delta Time
         update_time();
 
@@ -65,6 +77,8 @@ void Game::run()
         m_cur_scene->update(delta_time);
 
         render();
+
+        elapsed_time += delta_time;
     }
 }
 
@@ -125,4 +139,15 @@ void Game::render()
     m_cur_scene->render();
 
     m_window.swap_buffers();
+}
+
+void Game::change_scene(const std::string& scene_name)
+{
+    m_cur_scene = m_scenes[scene_name];
+
+    m_cur_scene->start();
+
+    //FIXME:
+    //Will eventually get rid of this once I figure out how to pass engine data to scenes
+    m_cur_scene->set_camera(m_camera);
 }

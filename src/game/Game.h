@@ -44,5 +44,5 @@ public:
     void run();
 
     //This will go into a scene manager
-    void change_scene(Scene* scene);
+    void change_scene(const std::string& scene_name);
 };

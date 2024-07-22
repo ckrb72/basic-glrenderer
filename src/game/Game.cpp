@@ -86,12 +86,12 @@ void Game::run()
     while(!m_quit)
     {
         //Update Delta Time
-        //update_time();
+        update_time();
 
         //Handle Input
         handle_events();
 
-        scene->update();
+        scene->update(delta_time);
 
         m_window.clear();
 

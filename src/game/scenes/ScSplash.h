@@ -16,6 +16,6 @@ public:
     ~ScSplash();
 
     void start();
-    void update();
+    void update(float delta);
     void render();
 };  

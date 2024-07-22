@@ -29,17 +29,21 @@ void ScSplash::start()
     m_splash.set_size(256, 256);
     m_time = 0.0;
 
-}
-
-void ScSplash::update()
-{
     m_splash.set_clip(0, 0);
 
-    if(m_time > 0.1)
+}
+
+void ScSplash::update(float delta)
+{
+
+    if(m_time >= 0.1)
     {
         x += 256;
         m_splash.set_clip(x, 0);
+        m_time = 0.0;
     }
+
+    m_time += delta;
 }
 
 void ScSplash::render()

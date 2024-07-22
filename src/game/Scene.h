@@ -16,31 +16,19 @@
 class Scene
 {
 protected:
-
-    // Might want an individual entity manager for each scene but for now will just have a vector of renderables
-    // This vector will hold references to renderables that we can the render in the render() method
-    // TODO: Also want this vector to hold an entity, not just a model so there can be physics objects and stuff too but for now this is fine
-    //std::vector<std::shared_ptr<Model>> m_entities;
-
-    // This should really be a shared pointer but I'm assuming right now that the game class
-    // will just delete the camera at the end. Will want to change this though and make it a shared pointer eventually
+    // FIXME: Do not want to have this here but need this for now.
+    // Will want to delete this as soon as I figure out how to pass engine data to scenes
     Camera* m_camera;
-
-    // Fine keeping this a raw pointer because we will never destruct a game object
-    // in a scene class (since a scene is always contained in a game)
-    //Game* Engine;
 
 public:
 
-    Scene();
-
-    ~Scene();
-
+    // FIXME: Will want to get rid of this and make this a pure abstract class
+    // Just need to figure out how to pass engine data to scenes
     void set_camera(Camera& camera);
 
-    void set_delta(float delta);
-
     //NOTE: Use of virtual functions below
+    // We want this class to be abstract so every function will be virtual.
+    // Also note that there is no constructor
     // Virtual functions are c++'s way of acheivieving runtime ploymorphism.
     // They are essentially function pointers (sort of) with some syntactic sugar
     // and are used in the oop context of c++. 
@@ -56,7 +44,7 @@ public:
 
     // This will be changable on per scene basis
     // Runs each frame
-    virtual void update() = 0;
+    virtual void update(float delta) = 0;
 
     // This will be changable on per scene basis
     // Runs each frame

@@ -2,17 +2,20 @@
 #include "../Scene.h"
 #include "../../core/SpriteSheet.h"
 
-class ScSplash : Scene
+class ScSplash : public Scene
 {
 private:
-    SpriteSheet m_animation;
+    SpriteSheet m_splash;
     Shader m_shader;
 
-
+    float m_time;
 
 public:
 
-    ScSplash() {}
-    ~ScSplash() {}
+    ScSplash();
+    ~ScSplash();
 
+    void start();
+    void update();
+    void render();
 };  

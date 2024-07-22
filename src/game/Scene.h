@@ -15,32 +15,30 @@
 
 class Scene
 {
-private:
+protected:
 
     // Might want an individual entity manager for each scene but for now will just have a vector of renderables
     // This vector will hold references to renderables that we can the render in the render() method
     // TODO: Also want this vector to hold an entity, not just a model so there can be physics objects and stuff too but for now this is fine
-    std::vector<std::shared_ptr<Model>> m_entities;
+    //std::vector<std::shared_ptr<Model>> m_entities;
 
-
-    std::shared_ptr<Camera> m_camera;
+    // This should really be a shared pointer but I'm assuming right now that the game class
+    // will just delete the camera at the end. Will want to change this though and make it a shared pointer eventually
+    Camera* m_camera;
 
     // Fine keeping this a raw pointer because we will never destruct a game object
     // in a scene class (since a scene is always contained in a game)
-    //Game* m_game;
-
+    //Game* Engine;
 
 public:
 
-    Scene() {}
+    Scene();
 
-    ~Scene() {}
-
+    ~Scene();
 
     void set_camera(Camera& camera);
 
     void set_delta(float delta);
-
 
     //NOTE: Use of virtual functions below
     // Virtual functions are c++'s way of acheivieving runtime ploymorphism.
@@ -52,10 +50,6 @@ public:
     // Just remember, whenever you see a virtual function, it allows you to override it in derived classes.
     // Same idea as virtual memory if you know what that is.
 
-    // This will be changable on per scene basis
-    // Runs each frame
-    virtual void render() = 0;
-
     // This will be changeable on per scene basis
     // Runs at startup (sort of like constructor)
     virtual void start() = 0;
@@ -64,12 +58,16 @@ public:
     // Runs each frame
     virtual void update() = 0;
 
+    // This will be changable on per scene basis
+    // Runs each frame
+    virtual void render() = 0;
+
     // This will be changeable on per scene basis
     // Runs each frame
-    virtual void handle_events() = 0;
+    //virtual void handle_events() = 0;
 
 
     // This probably shouldn't be changeable per scene but will do that anyway.
     // Runs each froms
-    virtual void handle_physics() = 0;
+    //virtual void handle_physics() = 0;
 };

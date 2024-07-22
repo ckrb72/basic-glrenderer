@@ -4,6 +4,9 @@
 #include <debug.h>
 #include "../core/SpriteSheet.h"
 #include "../core/engine_time.h"
+#include "../core/Model.h"
+
+#include "./scenes/ScSplash.h"
 
 #include <iostream>
 #include <graphics.h>
@@ -19,7 +22,7 @@ static Shader default_shader;
 static Model jupiter;
 
 Game::Game(const std::string& name, uint32_t width, uint32_t height)
-:m_window(name, width, height), m_width(width), m_height(height)
+:m_window(name, width, height)
 {
     //Start audio manager (will eventually put this in a wrapper class and put in initializer list)
 
@@ -31,7 +34,7 @@ Game::Game(const std::string& name, uint32_t width, uint32_t height)
     //m_scenes.push_back(&scene)
 
     //Generate camera projection matrix
-    m_camera.gen_perspective(PI / 2, (float)((float)m_width / (float)m_height), 0.1, 10.0);
+    m_camera.gen_perspective(PI / 2, (float)((float)width / (float)height), 0.1, 10.0);
 }
 
 Game::~Game()
@@ -41,6 +44,11 @@ Game::~Game()
 
 void Game::run()
 {
+
+
+    std::shared_ptr<Scene> scene = std::make_shared<ScSplash>();
+    scene->start();
+    scene->set_camera(m_camera);
 
 /*
 
@@ -63,7 +71,7 @@ void Game::run()
 */
 
 
-    update_time();
+    /*update_time();
 
     show_splash();
 
@@ -73,20 +81,28 @@ void Game::run()
     if(!default_shader.load("./shader/default.vert", "./shader/default.frag"))
     {
         std::cout << "Failed to load shader" << std::endl;
-    }
+    }*/
 
     while(!m_quit)
     {
         //Update Delta Time
-        update_time();
+        //update_time();
 
         //Handle Input
         handle_events();
 
+        scene->update();
+
+        m_window.clear();
+
+        scene->render();
+
+        m_window.swap_buffers();
+
         //Do game stuff like rendering, physics, game logic
 
         //game_logic();
-        render();
+        //render();
 
     }
 }
@@ -179,7 +195,6 @@ void Game::handle_events()
                 break;
 
             case SDL_MOUSEMOTION:
-                std::cout << "Mouse moved" << std::endl;
                 break;
                 
             default:

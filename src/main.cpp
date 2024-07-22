@@ -11,12 +11,15 @@
 #include "./core/audio.h"
 #include "./game/Game.h"*/
 
+#include "./game/Scene.h"
+#include "./game/scenes/ScSplash.h"
+
 
 #include "./math/lnal.h"
 #include "./game/Game.h"
 
 
-lnal::vec3 lightpos(1.0, 1.0, 1.0);
+//lnal::vec3 lightpos(1.0, 1.0, 1.0);
 
 
 
@@ -34,7 +37,6 @@ lnal::vec3 lightpos(1.0, 1.0, 1.0);
 
 int main()
 {
-
     Game game("SPOKERJYKER GAMKERJKL", 1280, 720);
     game.run();
 

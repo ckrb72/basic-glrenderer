@@ -2,11 +2,10 @@
 #include <stdint.h>
 #include <string>
 #include <map>
-#include "../core/audio.h"
 #include "../core/Camera.h"
 #include "../core/Window.h"
-#include "../core/EventManager.h"
-#include "Scene.h"
+#include "../core/input/input.h"
+#include "../core/Scene.h"
 
 
 /*
@@ -18,13 +17,12 @@ class Game
 private:
     bool m_quit = false;
 
-    //Handles input and events (i.e. keyboard and mouse inputs and windows events)
-    EventManager m_event_manager;
-
     Window m_window;
     Camera m_camera;
 
-    Scene* m_current_scene;
+    InputManager m_input;
+
+    std::shared_ptr<Scene> m_cur_scene;
     std::map<std::string, std::shared_ptr<Scene>> m_scenes; 
 
     //Timing
@@ -35,10 +33,6 @@ private:
 
     //Rendering
     void render();
-
-    //FIXME: WILL DELETE THIS ONCE SCENES ARE IMPLEMENTED
-    //Splash screen fun!!!
-    void show_splash();
     
 public:
     Game(const std::string& name, uint32_t width, uint32_t height);
@@ -49,5 +43,6 @@ public:
 
     void run();
 
+    //This will go into a scene manager
     void change_scene(Scene* scene);
 };

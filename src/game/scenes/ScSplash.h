@@ -1,5 +1,5 @@
 #pragma once
-#include "../Scene.h"
+#include "../../core/Scene.h"
 #include "../../core/SpriteSheet.h"
 
 class ScSplash : public Scene
@@ -15,7 +15,7 @@ public:
     ScSplash();
     ~ScSplash();
 
-    void start();
-    void update(float delta);
-    void render();
+    void start() override;
+    void update(float delta) override;
+    void render() override;
 };  

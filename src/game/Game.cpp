@@ -15,11 +15,7 @@ Game::Game(const std::string& name, uint32_t width, uint32_t height)
 
     //Set up input devices
 
-
     //Set up scenes
-    //scene.create.and.stuff()
-    //m_scenes.push_back(&scene)
-
     std::shared_ptr<Scene> splashscreen = std::make_shared<ScSplash>();
     m_scenes["splash"] = splashscreen;
 

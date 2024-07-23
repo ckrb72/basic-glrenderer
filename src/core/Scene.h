@@ -10,7 +10,6 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include "../core/Model.h"
 #include "../core/Camera.h"
 
 class Scene
@@ -49,6 +48,9 @@ public:
     // This will be changable on per scene basis
     // Runs each frame
     virtual void render() = 0;
+
+    // Runs at end of life (destructor)
+    //virtual void shutdown() = 0;
 
     // This will be changeable on per scene basis
     // Runs each frame

@@ -1,6 +1,6 @@
 #pragma once
-#include "../../core/Scene.h"
-#include "../../core/Model.h"
+#include <Scene.h>
+#include <Model.h>
 #include "../../math/lnal.h"
 
 

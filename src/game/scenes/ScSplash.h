@@ -3,6 +3,7 @@
 #include "../../core/SpriteSheet.h"
 #include "../../core/Camera.h"
 #include "../../math/lnal.h"
+#include "../../core/Shader.h"
 
 class ScSplash : public Scene
 {

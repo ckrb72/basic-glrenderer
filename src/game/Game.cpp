@@ -3,8 +3,7 @@
 #include <debug.h>
 #include "../core/engine_time.h"
 
-#include "./scenes/ScSplash.h"
-#include "./scenes/ScStatue.h"
+#include "./scenes/scene_list.h"
 
 #include <iostream>
 
@@ -20,7 +19,7 @@ Game::Game(const std::string& name, uint32_t width, uint32_t height)
 
     //Set up scenes
     std::shared_ptr<Scene> splashscreen = std::make_shared<ScSplash>();
-    m_scenes["splash"] = splashscreen;
+    m_scenes["sc_splash"] = splashscreen;
 
     m_scenes["jupiter_bust"] = std::make_shared<ScStatue>();
 }
@@ -29,7 +28,7 @@ Game::~Game() {}
 
 void Game::run()
 {
-    m_cur_scene = m_scenes["splash"];
+    m_cur_scene = m_scenes["sc_splash"];
 
     m_cur_scene->start();
 

@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <string>
 #include <map>
+#include <memory>
 #include "../core/Camera.h"
 #include "../core/Window.h"
 #include "../core/input/input.h"

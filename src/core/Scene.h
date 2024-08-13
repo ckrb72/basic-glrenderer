@@ -38,6 +38,9 @@ public:
     // Runs each frame
     virtual void render() = 0;
 
+    // Runs at end of life (destructor)
+    //virtual void shutdown() = 0;
+
     // This will be changeable on per scene basis
     // Runs each frame
     //virtual void handle_events() = 0;

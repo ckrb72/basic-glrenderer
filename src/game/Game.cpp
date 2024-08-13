@@ -23,9 +23,6 @@ Game::Game(const std::string& name, uint32_t width, uint32_t height)
     m_scenes["splash"] = splashscreen;
 
     m_scenes["jupiter_bust"] = std::make_shared<ScStatue>();
-
-    //Generate camera projection matrix
-    m_camera.gen_perspective(PI / 2, (float)((float)width / (float)height), 0.1, 10.0);
 }
 
 Game::~Game() {}
@@ -35,10 +32,6 @@ void Game::run()
     m_cur_scene = m_scenes["splash"];
 
     m_cur_scene->start();
-
-    //FIXME
-    //Want to eventually get rid of this but for now this will have to do
-    m_cur_scene->set_camera(m_camera);
 
 /*
 
@@ -146,8 +139,4 @@ void Game::change_scene(const std::string& scene_name)
     m_cur_scene = m_scenes[scene_name];
 
     m_cur_scene->start();
-
-    //FIXME:
-    //Will eventually get rid of this once I figure out how to pass engine data to scenes
-    m_cur_scene->set_camera(m_camera);
 }

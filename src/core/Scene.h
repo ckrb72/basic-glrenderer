@@ -8,23 +8,11 @@
 */
 
 #pragma once
-#include <vector>
-#include <memory>
-#include "../core/Model.h"
-#include "../core/Camera.h"
 
 class Scene
 {
-protected:
-    // FIXME: Do not want to have this here but need this for now.
-    // Will want to delete this as soon as I figure out how to pass engine data to scenes
-    Camera* m_camera;
 
 public:
-
-    // FIXME: Will want to get rid of this and make this a pure abstract class
-    // Just need to figure out how to pass engine data to scenes
-    void set_camera(Camera& camera);
 
     //NOTE: Use of virtual functions below
     // We want this class to be abstract so every function will be virtual.

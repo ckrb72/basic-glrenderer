@@ -16,6 +16,10 @@ ScSplash::~ScSplash()
 
 void ScSplash::start()
 {
+
+    // Want to get a window pointer here for the width and height but still need to figure out how to pass the data over to scenes
+    m_camera.gen_perspective(PI / 2, (float)(1920.0 / 1080.0), 0.1, 10.0);
+
     if(!m_shader.load("./shader/splash.vert", "./shader/splash.frag"))
     {
         std::cerr << "Failed to load Splash Screen Shader" << std::endl;
@@ -53,8 +57,8 @@ void ScSplash::render()
     lnal::translate_relative(model, lnal::vec3(0.0, 0.0, -1.0));
 
     m_shader.set_mat4fv("model", model.data());
-    m_shader.set_mat4fv("projection", m_camera->get_projection());
-    m_shader.set_mat4fv("view", m_camera->get_view());
+    m_shader.set_mat4fv("projection", m_camera.get_projection());
+    m_shader.set_mat4fv("view", m_camera.get_view());
     m_shader.set_int("sprite_sheet", 0);
 
 

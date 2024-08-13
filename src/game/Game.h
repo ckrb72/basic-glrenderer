@@ -18,8 +18,6 @@ private:
     bool m_quit = false;
 
     Window m_window;
-    Camera m_camera;
-
     InputManager m_input;
 
     std::shared_ptr<Scene> m_cur_scene;

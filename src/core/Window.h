@@ -12,8 +12,11 @@ private:
     SDL_Window* m_window;
 
     bool open;
+    uint32_t m_width;
+    uint32_t m_height;
 
 public:
+
     Window(const std::string& title, uint32_t width, uint32_t height);
 
     ~Window();
@@ -22,5 +25,9 @@ public:
 
     void swap_buffers();
 
-    
+    uint32_t get_width();
+    uint32_t get_height();
+
+    inline SDL_Window* get_handle() { return m_window; }
+    inline void* get_sdl_context() { return SDL_GLContext(); }
 };

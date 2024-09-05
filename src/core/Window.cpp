@@ -71,3 +71,13 @@ void Window::swap_buffers()
 {
     SDL_GL_SwapWindow(m_window);
 }
+
+uint32_t Window::get_width()
+{
+    return this->m_width;
+}
+
+uint32_t Window::get_height()
+{
+    return this->m_height;
+}

@@ -18,6 +18,8 @@ Texture::~Texture()
 
 bool Texture::load(const std::string& filepath)
 {
+
+    std::cout << filepath << std::endl;
     int32_t width, height, channels;
 
     #if defined(GPU_FLIP_TEX)
@@ -28,7 +30,10 @@ bool Texture::load(const std::string& filepath)
     unsigned char* image = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
 
     if(!image)
+    {
+        std::cout << "Failed to find texture: " << filepath << std::endl;
         return false;
+    }
 
         
     m_width = width;
@@ -38,6 +43,7 @@ bool Texture::load(const std::string& filepath)
     if(!gpu_gen_texture((const unsigned char*)image))
     {
         stbi_image_free(image);
+        std::cout << "Failed to generate texture on GPU" << std::endl;
         return false;
     }
 

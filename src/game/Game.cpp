@@ -1,120 +1,83 @@
 #include "Game.h"
 #include <vector>
-#include "../core/Mesh.h"
 #include <debug.h>
-#include "../core/SpriteSheet.h"
 #include "../core/engine_time.h"
 
+#include "./scenes/scene_list.h"
+
+#include <imgui.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_opengl3.h>
+
 #include <iostream>
-#include <graphics.h>
+
+float elapsed_time = 0.0;
+bool scene_switched = false;
 
 Game::Game(const std::string& name, uint32_t width, uint32_t height)
-:m_window(name, width, height), m_width(width), m_height(height)
+:m_window(name, width, height)
 {
     //Start audio manager (will eventually put this in a wrapper class and put in initializer list)
-    m_audio_manager.init();
 
     //Set up input devices
 
-    //Generate camera projection matrix
-    m_camera.gen_perspective(PI / 2, (float)((float)m_width / (float)m_height), 0.1, 10.0);
+    //Set up scenes
+    std::shared_ptr<Scene> splashscreen = std::make_shared<ScSplash>();
+    m_scenes["sc_splash"] = splashscreen;
+
+    m_scenes["jupiter_bust"] = std::make_shared<ScStatue>();
 }
 
-Game::~Game()
+Game::~Game() 
 {
-    m_audio_manager.deinit();
 }
 
 void Game::run()
 {
-    update_time();
-    show_splash();
-    
+
+    m_cur_scene = m_scenes["sc_splash"];
+
+    m_cur_scene->start();
+
+/*
+
+    For final engine would have a pointer to the scene class and do the following
+
     while(!m_quit)
     {
+
+        if(scene_change_event)
+        {
+            change_scene(&new_scene);
+        }
+
+        scene->update_time();
+        scene->handle_events();
+        scene->update_physics();
+        scene->render();
+    }
+
+*/
+    while(!m_quit)
+    {
+
+        if(elapsed_time >= 3.0 && !scene_switched)
+        {
+            change_scene("jupiter_bust");
+            scene_switched = true;
+        }
+
         //Update Delta Time
         update_time();
 
         //Handle Input
         handle_events();
 
-        //Do game stuff like rendering, physics, game logic
-
-
-        //game_logic();
-
+        m_cur_scene->update(delta_time);
 
         render();
 
-    }
-}
-
-//Shows splash screen on startup
-void Game::show_splash()
-{
-    Shader splash_shader;
-    splash_shader.load("./shader/splash.vert", "./shader/splash.frag");
-
-    //Audio stuff (will abstract this later)
-    SoLoud::Wav boom;
-    boom.load("./assets/sound/vine_boom_sound.wav");
-
-    //Load spritesheet
-    SpriteSheet splash_mesh;
-
-    if(!splash_mesh.load("./assets/img/splashscreen.png"))
-    {
-        dbglog("Failed to load splash screen");
-    }
-
-    bool sheet_done = false;
-
-    splash_shader.bind();
-
-    lnal::mat4 model(1.0);
-    lnal::translate_relative(model, lnal::vec3(0.0, 0.0, -1.0));
-
-    splash_shader.set_mat4fv("model", model.data());
-    splash_shader.set_mat4fv("projection", m_camera.get_projection());
-    splash_shader.set_mat4fv("view", m_camera.get_view());
-    splash_shader.set_int("sprite_sheet", 0);
-
-    splash_mesh.set_size(256, 256);
-
-    uint32_t x = 0;
-
-    //Actually play the sound
-    //int handle = m_audio_manager.play(boom);
-
-    float time = 0;
-
-    //Play frames of spritesheet
-    while(!sheet_done && !m_quit)
-    {
-        update_time();
-
-        //Handle basic events so window doesn't crash
-        handle_events();
-
-        splash_mesh.set_clip(x, 0);
-
-        if(time >= 0.1)
-        {
-            x += 256;
-            time = 0.0;
-        }
-
-        time += delta_time;
-
-        m_window.clear();
-
-        //Draw frames
-        splash_mesh.draw();
-
-        m_window.swap_buffers();
-
-        if(x == 4096)
-            sheet_done = true;
+        elapsed_time += delta_time;
     }
 }
 
@@ -122,8 +85,6 @@ void Game::update_time()
 {
    delta_time = calc_delta();
 }
-
-
 
 void Game::handle_events()
 {
@@ -135,6 +96,10 @@ void Game::handle_events()
             case SDL_QUIT:
                 m_quit = true;
                 break;
+
+            case SDL_MOUSEMOTION:
+                break;
+                
             default:
                 break;
         }
@@ -144,17 +109,40 @@ void Game::handle_events()
 
     uint8_t w = keyboard_state[SDL_GetScancodeFromName("w")];
 
+    if(w)
+    {
+        std::cout << "Key Pressed" << std::endl;
+    }
+
+
+    uint8_t esc = keyboard_state[SDL_GetScancodeFromName("escape")];
+
+    if(esc)
+    {
+        m_quit = true;
+    }
+
+    /*
+        Want to make an input manager that you can query the key for
+        For example, if(input.keyboard.is_pressed('a')) { ... }
+        or if(input.mouse.is_pressed('left')) { ... }
+    */
+
 
 }
 
 void Game::render()
 {
     m_window.clear();
-    
-    
-    //Go through entity manager and draw everything in there...
-    //Or maybe have a pool somewhere that holds all things we want to draw...
 
+    m_cur_scene->render();
 
     m_window.swap_buffers();
+}
+
+void Game::change_scene(const std::string& scene_name)
+{
+    m_cur_scene = m_scenes[scene_name];
+
+    m_cur_scene->start();
 }

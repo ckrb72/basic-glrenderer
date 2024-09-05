@@ -17,10 +17,10 @@ class Model
 {
 private:
     std::vector<std::unique_ptr<Mesh>> m_meshes;
+    std::vector<Texture> m_loaded_textures;
 
     bool processNode(aiNode* node, const aiScene* scene);
     std::unique_ptr<Mesh> processMesh(aiMesh* mesh, const aiScene* scene);
-
 
 public: 
 
@@ -31,4 +31,7 @@ public:
     bool load(const std::string& filepath);
 
     void draw(Shader& shader);
+
+    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+
 };

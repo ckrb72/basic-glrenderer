@@ -1,47 +1,34 @@
 #pragma once
 #include <stdint.h>
 #include <string>
-#include "EntityManager.h"
-#include "../core/audio.h"
+#include <map>
+#include <memory>
 #include "../core/Camera.h"
 #include "../core/Window.h"
-#include "../core/EventManager.h"
+#include "../core/input/input.h"
+#include "../core/Scene.h"
 
+
+/*
+    Need to add audio
+*/
 
 class Game
 {
 private:
-    uint32_t m_width;
-    uint32_t m_height;
-
-    float delta_time;
-
-    EntityManager m_entity_manager;
-
-    //Handles input and events (i.e. keyboard and mouse inputs and windows events)
-    EventManager m_event_manager;
-
-    
-    Window m_window;
-    Camera m_camera;
-    //AudioManager m_audio_manager;
-
-    SoLoud::Soloud m_audio_manager;
-    
-
     bool m_quit = false;
 
-    //Splash screen fun!!!
-    void show_splash();
+    Window m_window;
+    InputManager m_input;
+
+    std::shared_ptr<Scene> m_cur_scene;
+    std::map<std::string, std::shared_ptr<Scene>> m_scenes; 
 
     //Timing
     void update_time();
 
     //Input
     void handle_events();
-
-    //Physics
-    void newtons_nightmare();
 
     //Rendering
     void render();
@@ -51,5 +38,10 @@ public:
 
     ~Game();
 
+    float delta_time;
+
     void run();
+
+    //This will go into a scene manager
+    void change_scene(const std::string& scene_name);
 };

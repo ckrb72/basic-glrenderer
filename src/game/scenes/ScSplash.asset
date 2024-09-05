@@ -1,0 +1,28 @@
+# Meta data file for scene telling it where to load all data from and what to load
+# This will be an example file that I will build a parser for later on
+# All relative paths will be relative to the final executable that is compiled (like a normal relative path is)
+# Need to figure out how to decide what kind of asset the file is (i.e. audio, model, texture, etc.)
+
+[dpath rel] ./assets/
+
+# Textures
+<Texture>       # Tells you what asset type we are loading (here it is a texture)
+image/container.jpg    'container'          # Load the texture from the given path and then call it container
+image/containter2_specular.png  'container_spec'
+image/container2.png            'container2'
+
+# Models
+<Model>         # Here we want to load models
+model/BunkerHill.obj
+model/cube.fbx
+model/house.fbx
+
+# Audio
+<Audio>         # Tells to load audio
+sound/Lucas_Scream.wav
+
+# If you want to load an asset from a path that is not the already set default then you can use extern
+# ex.
+<Model>
+[extern rel] ./src/core/model.fbx
+[extern abs] ~/Ciaran/Desktop/Game/model.fbx

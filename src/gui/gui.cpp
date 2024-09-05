@@ -129,6 +129,7 @@ static void gen_frame()
     if(ImGui::CollapsingHeader("Demos"))
     {
         ImVec2 placeholder(0.0, 0.0);
+        ImGui::Button("Textures");
         ImGui::Button("Lighting", placeholder);
         ImGui::Button("Models");
         ImGui::Button("Spritesheet");

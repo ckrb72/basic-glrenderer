@@ -1,24 +1,79 @@
-#include <graphics.h>
+#include "./core/Window.h"
+#include "./core/Model.h"
+#include "./core/Shader.h"
+#include "./core/Texture.h"
+#include "./core/Camera.h"
 #include <iostream>
+#include "./gui/gui.h"
 
-#include "./math/lnal.h"
-#include "./game/Game.h"
-
-// IDEA FOR ARCHITECTURE OF REST OF ENGINE / GAME
-// Games will be split into scenes. One scene will be rendered at a time and will play until a different scene is played.
-// Main game class will handle scene management but individual scenes will decide what to do with their own input / physics / rendering / whatever.
-// This way you can heavily change what happens in each scene. 
-// This will stay in common between scenes (such as camera) but can manipulate those things however you want (can change camera position, fov, projection, etc.)
-// Examples of scenes: splash screen, main menu, game level, etc.
-// This way, the game programmer can just worry about programming each scene and then decide when to change them out (perhaps with an event system or something)
-// I just have to decide if I want to use OOP heavily with this. Like each new scene would be a derived class of the base Scene class and you would override the basic functions like render, update, etc.
-// But this leaves a bad taste in my mouth because I still don't like OOP that much and you would have a lot of extra classes. This does seem like the easiest way though so I might just do that.
-// Delta time will be another thing that is going to be an engine wide thing, since that should be a black box and the user (game programmer) shouldn't mess with it.
+const int WIN_WIDTH = 1920;
+const int WIN_HEIGHT = 1080;
 
 int main()
 {
-    Game game("SPOKERJYKER GAMKERJKL", 1280, 720);
-    game.run();
+    Window win("Render Library Demo", WIN_WIDTH, WIN_HEIGHT);
 
-    return 0;
+    gui_setup(win);
+
+    Shader shader{};
+    if (!shader.load("./shader/default.vert", "./shader/default.frag"))
+    {
+        std::cerr << "Failed to load shader" << std::endl;
+    }
+
+
+    Model jupiter{};
+    if (!jupiter.load("./assets/model/jupiter.obj"))
+    {
+        std::cerr << "Failed to load model" << std::endl;
+    }
+
+    Camera cam{};
+
+    cam.gen_perspective(PI / 2, (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1, 100.0);
+
+    lnal::vec3 pos = { 0.0, 0.0, 3.0 };
+    lnal::vec3 lookat = { 0.0, 0.0 ,0.0 };
+    lnal::vec3 up = { 0.0, 1.0, 0.0 };
+    cam.lookat(pos, lookat, up);
+
+
+
+    bool should_close = false;
+    while(!should_close)
+    {
+        SDL_Event event;
+        while(SDL_PollEvent(&event))
+        {
+            gui_process_event(&event);
+            switch(event.type)
+            {
+                case SDL_QUIT:
+                    should_close = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        gui_create_frame();
+
+        win.clear();
+
+        lnal::mat4 model(1.0);
+        lnal::scale(model, 0.01);
+        lnal::translate_relative(model, lnal::vec3(0.0, -1.0, -2.0));
+
+        shader.bind();
+        shader.set_mat4fv("model", model.data());
+        shader.set_mat4fv("view", cam.get_view());
+        shader.set_mat4fv("projection", cam.get_projection());
+        jupiter.draw(shader);
+
+        gui_draw();
+
+        win.swap_buffers();
+    }
+
+    gui_shutdown();
 }

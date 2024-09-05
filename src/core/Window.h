@@ -27,4 +27,7 @@ public:
 
     uint32_t get_width();
     uint32_t get_height();
+
+    inline SDL_Window* get_handle() { return m_window; }
+    inline void* get_sdl_context() { return SDL_GLContext(); }
 };

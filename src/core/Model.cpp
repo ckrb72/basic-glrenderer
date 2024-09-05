@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "Mesh.h"
+#include <iostream>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -36,9 +37,6 @@ bool Model::load(const std::string& filepath)
         error_log("Failed to load model");
         return false;
     }
-    dbglog("Model loaded...");
-
-
     processNode(scene->mRootNode, scene);
 
     return true;

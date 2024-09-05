@@ -13,6 +13,9 @@ private:
 
 public: 
 
+    std::string path;
+    std::string type;
+
     Texture();
     ~Texture();
 

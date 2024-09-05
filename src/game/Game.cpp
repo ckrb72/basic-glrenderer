@@ -5,6 +5,10 @@
 
 #include "./scenes/scene_list.h"
 
+#include <imgui.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_opengl3.h>
+
 #include <iostream>
 
 float elapsed_time = 0.0;
@@ -24,10 +28,13 @@ Game::Game(const std::string& name, uint32_t width, uint32_t height)
     m_scenes["jupiter_bust"] = std::make_shared<ScStatue>();
 }
 
-Game::~Game() {}
+Game::~Game() 
+{
+}
 
 void Game::run()
 {
+
     m_cur_scene = m_scenes["sc_splash"];
 
     m_cur_scene->start();

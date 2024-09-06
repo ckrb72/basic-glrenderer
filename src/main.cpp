@@ -6,6 +6,7 @@
 #include <iostream>
 #include "./gui/gui.h"
 #include "./core/input/input.h"
+#include "./core/engine_time.h"
 
 
 const int WIN_WIDTH = 1920;
@@ -14,11 +15,17 @@ const int WIN_HEIGHT = 1080;
 bool show_cursor = false;
 
 static void toggle_cursor();
-static void process_keyboard();
+
+float delta = 0.0f;
+
+lnal::vec3 cam_pos = { 0.0f, 0.0f, 5.0f};
+lnal::vec3 cam_up = { 0.0f, 1.0f, 0.0f };
 
 int main()
 {
     Window win("Render Library Demo", WIN_WIDTH, WIN_HEIGHT);
+
+    SDL_GL_SetSwapInterval(0);
 
     init_input();
 
@@ -51,10 +58,22 @@ int main()
     SDL_SetRelativeMouseMode(SDL_TRUE);
 
 
+    delta = calc_delta();
+
 
     bool should_close = false;
+
+    float yaw = -90.0f;
+    float pitch = 0.0f;
+    float sensitivity = 0.1f;
+
+
     while(!should_close)
     {
+        delta = calc_delta();
+
+
+        /* Handle Input */
         SDL_Event event;
         while(SDL_PollEvent(&event))
         {
@@ -64,7 +83,15 @@ int main()
                 case SDL_MOUSEMOTION:
                     /* Do mouse motion stuff here */
                     if(!show_cursor)
+                    {
                         SDL_WarpMouseInWindow(win.get_handle(), WIN_WIDTH / 2, WIN_HEIGHT / 2);
+                        yaw += event.motion.xrel * sensitivity;
+                        pitch -= event.motion.yrel * sensitivity;
+                        if(pitch > 89.0f)
+                            pitch = 89.0f;
+                        if(pitch < -89.0f)
+                            pitch = -89.0f;
+                    }
                     break;
                 case SDL_QUIT:
                     should_close = true;
@@ -74,8 +101,51 @@ int main()
             }
         }
 
-        process_keyboard();
+        update_keyboard_state();
+        const KeyState* keyboard = get_keyboard_state();
 
+        if(keyboard[SDL_SCANCODE_ESCAPE] == KEY_STATE_PRESSED)
+        {
+            toggle_cursor();
+        }
+
+
+
+        // Camera look direction based on mouse movement
+        lnal::vec3 look_dir{};
+        look_dir[0] = cos(lnal::radians(yaw)) * cos(lnal::radians(pitch));
+        look_dir[1] = sin(lnal::radians(pitch));
+        look_dir[2] = sin(lnal::radians(yaw)) * cos(lnal::radians(pitch));
+
+        look_dir.normalize();
+
+
+        // If adding a keyboard interaction here, don't forget to add the in update_keyboard_state()
+        if(!show_cursor)
+        {
+            if(keyboard[SDL_SCANCODE_A] == KEY_STATE_HELD)
+                cam_pos -= delta * lnal::cross(look_dir, cam_up);
+
+            if(keyboard[SDL_SCANCODE_S] == KEY_STATE_HELD)
+                cam_pos -= delta * look_dir;
+
+            if(keyboard[SDL_SCANCODE_D] == KEY_STATE_HELD)
+                cam_pos += delta * lnal::cross(look_dir, cam_up);
+
+            if(keyboard[SDL_SCANCODE_W] == KEY_STATE_HELD)
+                cam_pos += delta * look_dir;
+
+            if(keyboard[SDL_SCANCODE_SPACE] == KEY_STATE_HELD)
+                cam_pos += delta * cam_up;
+
+            if(keyboard[SDL_SCANCODE_LSHIFT] == KEY_STATE_HELD)
+                cam_pos -= delta * cam_up;
+        }
+
+        cam.lookat(cam_pos, cam_pos + look_dir, cam_up);
+
+
+        /* Draw Stuff */
         gui_create_frame();
 
         win.clear();
@@ -94,7 +164,6 @@ int main()
 
         win.swap_buffers();
     }
-
     gui_shutdown();
 }
 
@@ -109,32 +178,4 @@ static void toggle_cursor()
         show = SDL_TRUE;
     
     SDL_SetRelativeMouseMode(show);
-}
-
-static void process_keyboard()
-{
-    update_keyboard_state();
-    const KeyState* keyboard = get_keyboard_state();
-
-    if(keyboard[SDL_SCANCODE_ESCAPE] == KEY_STATE_PRESSED)
-    {
-        toggle_cursor();
-    }
-
-    // If adding a keyboard interaction here, don't forget to add the in update_keyboard_state()
-    if(!show_cursor)
-    {
-        if(keyboard[SDL_SCANCODE_A] == KEY_STATE_PRESSED)
-            std::cout << "A" << std::endl;
-
-        if(keyboard[SDL_SCANCODE_S] == KEY_STATE_PRESSED)
-            std::cout << "S" << std::endl;
-
-        if(keyboard[SDL_SCANCODE_D] == KEY_STATE_PRESSED)
-            std::cout << "D" << std::endl;
-
-        if(keyboard[SDL_SCANCODE_W] == KEY_STATE_PRESSED)
-            std::cout << "W" << std::endl;
-    }
-
 }

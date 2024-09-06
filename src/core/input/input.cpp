@@ -21,6 +21,8 @@ void update_keyboard_state()
     update_state(cur_keyboard, SDL_SCANCODE_W);
     update_state(cur_keyboard, SDL_SCANCODE_S);
     update_state(cur_keyboard, SDL_SCANCODE_D);
+    update_state(cur_keyboard, SDL_SCANCODE_SPACE);
+    update_state(cur_keyboard, SDL_SCANCODE_LSHIFT);
 
 }
 

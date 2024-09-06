@@ -9,8 +9,6 @@ out vec4 final_color;
 uniform vec3 light_color;
 uniform vec3 cam_pos;
 
-vec3 object_color = vec3(0.7, 0.7, 0.7);
-
 struct Material
 {
     vec3 ambient;

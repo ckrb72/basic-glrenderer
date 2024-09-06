@@ -2,8 +2,16 @@
 #include <imgui.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_opengl3.h>
+#include <iostream>
 
 static void gen_frame();
+
+
+static bool light_demo = false;
+static bool texture_demo = false;
+static bool model_demo = false;
+static bool spritesheet_demo = false;
+static bool paused = false;
 
 void gui_setup(Window& win)
 {
@@ -52,7 +60,7 @@ static void gen_frame()
 
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(ImVec2(viewport->WorkPos.x, viewport->WorkPos.y), ImGuiCond_FirstUseEver);
-    ImGui::SetNextWindowSize(ImVec2(550, 680), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(550, viewport->WorkSize.y), ImGuiCond_FirstUseEver);
 
     if(!ImGui::Begin("Render Library Demo", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
     {
@@ -60,28 +68,22 @@ static void gen_frame()
         return;
     }
 
-    if(ImGui::BeginMenuBar())
-    {
-        ImGui::Text("Render Library Demo");
+    ImGui::SeparatorText("Press ESC to toggle mouse");
 
-        ImGui::EndMenuBar();
-    }
-
-    ImGui::BeginChild("About");
+    ImGui::Spacing();
 
     if(ImGui::CollapsingHeader("About"))
     {
             ImGui::SeparatorText("Motivation");
             ImGui::Text("Implement a basic graphics library in c++");
             ImGui::Text("Written in standard c++20");
-            ImGui::Text("Cross Platform: Works on OSX and Windows");
-            ImGui::Text("(not tested on Linux systems but probably works");
-            ImGui::Text("[massive coping] )");
+            ImGui::TextWrapped("Cross Platform: Works on OSX and Windows (don't notice the lack of any mention of linux)");
             ImGui::Text("OpenGL 4.1 API used for all graphics operations");
 
             ImGui::Spacing();
 
             ImGui::SeparatorText("Features");
+            ImGui::BulletText("Blinn Shading");
             ImGui::BulletText("Texture Loading");
             ImGui::BulletText("Model Loading");
             ImGui::BulletText("Spritesheet Animations");
@@ -129,17 +131,102 @@ static void gen_frame()
     if(ImGui::CollapsingHeader("Demos"))
     {
         ImVec2 placeholder(0.0, 0.0);
-        ImGui::Button("Textures");
-        ImGui::Button("Lighting", placeholder);
-        ImGui::Button("Models");
-        ImGui::Button("Spritesheet");
-        ImGui::Button("Shaders");
+        if(ImGui::Button("Textures"))
+        {
+            texture_demo = !texture_demo;
+        }
+
+
+        if(ImGui::Button("Lighting"))
+        {
+            light_demo = !light_demo;
+        }
+
+
+        if(ImGui::Button("Models"))
+        {
+            model_demo = !model_demo;
+        }
+
+        if(ImGui::Button("Spritesheet"))
+        {
+            spritesheet_demo = !spritesheet_demo;
+        }
     }
 
+    ImGui::Spacing();
 
-    ImGui::EndChild();
+    static float f_vec[3] = { 0.0f, 0.0f, 0.0f };
+    static float light_color[3] = { 0.0f, 0.0f, 0.0f };
+    static float f_scalar = 0.0f;
+    static int i_scalar = 0;
+
+    if(light_demo)
+    {
+        ImGui::SeparatorText("Model");
+        ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
+        ImGui::DragFloat("Rotation", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
+
+        ImGui::SeparatorText("Light");
+        ImGui::DragFloat("Position", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
+        ImGui::ColorEdit3("Color", light_color);
+    }
+
+    if(texture_demo)
+    {
+        ImGui::SeparatorText("Texture");
+        ImGui::ColorEdit3("Color", light_color);
+    }
+
+    if(spritesheet_demo)
+    {
+        ImGui::SeparatorText("SpriteSheet");
+        ImGui::DragInt("Clip Width", &i_scalar, 1, 0, 255, "%d", ImGuiSliderFlags_None);
+        ImGui::DragInt("Clip Height", &i_scalar, 1, 0, 255, "%d", ImGuiSliderFlags_None);
+
+        ImGui::Spacing(); 
+
+        ImGui::DragInt("Clip X", &i_scalar, 1, 0, 255, "%d", ImGuiSliderFlags_None);
+        ImGui::DragInt("Clip Y", &i_scalar, 1, 0, 255, "%d", ImGuiSliderFlags_None);
+
+        std::string pause_str;
+        if(paused)
+            pause_str = "Play";
+        else
+            pause_str = "Pause";
+
+        if(ImGui::Button(pause_str.c_str()))
+        {
+            paused = !paused;
+        }
+
+        ImGui::SameLine();
+
+        if(ImGui::Button("Reset"))
+        {
+            /* Reset values to default */
+        }
+    }
+
+    if(model_demo)
+    {
+        /* Choose models here */
+        /* Choose shaders too */
+
+        ImGui::SeparatorText("Model");
+
+        static bool selected = false;
+
+        if(ImGui::Selectable("Model 1", selected))
+        {
+            selected = !selected;
+        }
+
+        ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
+        ImGui::DragFloat("Rotation", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
 
 
+    }
 
     ImGui::End();
 }

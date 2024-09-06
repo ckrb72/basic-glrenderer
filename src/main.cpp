@@ -37,6 +37,30 @@ int main()
         std::cerr << "Failed to load shader" << std::endl;
     }
 
+    Shader normals{};
+    if (!normals.load("./shader/normals.vert", "./shader/normals.frag"))
+    {
+        std::cerr << "Failed to load shader" << std::endl;
+    }
+
+    Shader lighting{};
+    if(!lighting.load("./shader/light.vert", "./shader/light.frag"))
+    {
+        std::cerr << "Failed to load shader" << std::endl;
+    }
+
+    Shader world_space{};
+    if(!world_space.load("./shader/world_space.vert", "./shader/world_space.frag"))
+    {
+        std::cerr << "Failed to load shader" << std::endl;
+    }
+
+    Shader view_space{};
+    if(!view_space.load("./shader/view_space.vert", "./shader/view_space.frag"))
+    {
+        std::cerr << "Failed to load shader" << std::endl;
+    }
+
 
     Model jupiter{};
     if (!jupiter.load("./assets/model/jupiter.obj"))

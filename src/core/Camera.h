@@ -13,6 +13,10 @@ public:
     lnal::vec3 up;
     lnal::vec3 forward;
 
+    float sensitivity = 0.1f;
+    float yaw = -90.0f;
+    float pitch = 0.0f;
+
     Camera();
 
     ~Camera();

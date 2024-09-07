@@ -16,7 +16,7 @@ static std::shared_ptr<FeatureDemo> cur_demo = nullptr;
 bool demo_init(Window* win)
 {
     demos[DEMO_MODEL] = std::make_shared<ModelDemo>();
-    if(!demos[DEMO_MODEL]->init_demo(win))
+    if(!demos[DEMO_MODEL]->init(win))
     {
         std::cerr << "Failed to load Model Demo" << std::endl;
         return false;
@@ -34,15 +34,20 @@ void load_demo(DemoType type)
     cur_demo = demos[type];
 }
 
+void demo_frame_start()
+{
+    cur_demo->frame_start();
+}
+
 
 void demo_update()
 {
-    cur_demo->update_demo();
+    cur_demo->update();
 }
 
 void demo_draw()
 {
-    cur_demo->draw_demo();
+    cur_demo->draw();
 }
 
 void demo_destroy()

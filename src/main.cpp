@@ -64,7 +64,7 @@ int main()
     win.set_cursor_relative(true);
 
 
-    delta = calc_delta();
+    calc_delta();
 
     float yaw = -90.0f;
     float pitch = 0.0f;
@@ -73,7 +73,7 @@ int main()
 
     while(!win.is_closed())
     {
-        delta = calc_delta();
+        calc_delta();
 
         /* If we aren't showing the cursor, then place it in the middle of the screen */
         if(!show_cursor)
@@ -116,22 +116,22 @@ int main()
         if(!show_cursor)
         {
             if(Input.Keyboard[SDL_SCANCODE_A] == KEY_STATE_HELD)
-                cam_pos -= delta * lnal::cross(look_dir, cam_up);
+                cam_pos -= Time.delta * lnal::cross(look_dir, cam_up);
 
             if(Input.Keyboard[SDL_SCANCODE_S] == KEY_STATE_HELD)
-                cam_pos -= delta * look_dir;
+                cam_pos -= Time.delta * look_dir;
 
             if(Input.Keyboard[SDL_SCANCODE_D] == KEY_STATE_HELD)
-                cam_pos += delta * lnal::cross(look_dir, cam_up);
+                cam_pos += Time.delta * lnal::cross(look_dir, cam_up);
 
             if(Input.Keyboard[SDL_SCANCODE_W] == KEY_STATE_HELD)
-                cam_pos += delta * look_dir;
+                cam_pos += Time.delta * look_dir;
 
             if(Input.Keyboard[SDL_SCANCODE_SPACE] == KEY_STATE_HELD)
-                cam_pos += delta * cam_up;
+                cam_pos += Time.delta * cam_up;
 
             if(Input.Keyboard[SDL_SCANCODE_LSHIFT] == KEY_STATE_HELD)
-                cam_pos -= delta * cam_up;
+                cam_pos -= Time.delta * cam_up;
         }
 
         cam.position = cam_pos;

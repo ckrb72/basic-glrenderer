@@ -1,8 +1,9 @@
 #include "ModelDemo.h"
 #include <iostream>
 #include "../core/input/input.h"
+#include "../core/engine_time.h"
 
-bool ModelDemo::init_demo(Window* win)
+bool ModelDemo::init(Window* win)
 {
     this->win = win;
 
@@ -30,19 +31,73 @@ bool ModelDemo::init_demo(Window* win)
     cur_model = models[0];
     cur_shader = &shaders[0];
 
+    cam.position = { 0.0, 0.0, 5.0 };
+    cam.forward = { 0.0, 0.0, 0.0 };
+    cam.up = { 0.0, 1.0, 0.0 };
+
     return true;
 }
 
-void ModelDemo::draw_demo()
+void ModelDemo::draw()
 {
 
     /* Draw currently selected model with currently selected shader */
 
 }
 
-void ModelDemo::update_demo()
+void ModelDemo::frame_start()
+{
+    /* Set cursor to middle of screen before we do anything in the frame */
+    if(!show_cursor)
+        win->set_cursor_pos(win->get_width() / 2, win->get_height() / 2);
+}
+
+void ModelDemo::update()
 {
     /* Update cam position */
+
+    if(!show_cursor)
+    {
+        cam.yaw += Input.Mouse.dx * cam.sensitivity;
+        cam.pitch -= Input.Mouse.dy * cam.sensitivity;
+        if(cam.pitch > 89.0f)
+            cam.pitch = 89.0f;
+        if(cam.pitch < -89.0f)
+            cam.pitch = -89.0f;
+    }
+
+    // Camera look direction based on mouse movement
+    lnal::vec3 look_dir{};
+    look_dir[0] = cos(lnal::radians(cam.yaw)) * cos(lnal::radians(cam.pitch));
+    look_dir[1] = sin(lnal::radians(cam.pitch));
+    look_dir[2] = sin(lnal::radians(cam.yaw)) * cos(lnal::radians(cam.pitch));
+    look_dir.normalize();
+
+        // If adding a keyboard interaction here, don't forget to add the in update_keyboard_state()
+    if(!show_cursor)
+    {
+
+        if(Input.Keyboard[SDL_SCANCODE_A] == KEY_STATE_HELD)
+            cam.position -= Time.delta * lnal::cross(look_dir, cam.up);
+
+        if(Input.Keyboard[SDL_SCANCODE_S] == KEY_STATE_HELD)
+            cam.position -= Time.delta * look_dir;
+
+        if(Input.Keyboard[SDL_SCANCODE_D] == KEY_STATE_HELD)
+            cam.position += Time.delta * lnal::cross(look_dir, cam.up);
+
+        if(Input.Keyboard[SDL_SCANCODE_W] == KEY_STATE_HELD)
+            cam.position += Time.delta * look_dir;
+
+        if(Input.Keyboard[SDL_SCANCODE_SPACE] == KEY_STATE_HELD)
+            cam.position += Time.delta * cam.up;
+
+        if(Input.Keyboard[SDL_SCANCODE_LSHIFT] == KEY_STATE_HELD)
+            cam.position -= Time.delta * cam.up;
+    }
+
+    cam.forward = cam.position + look_dir;
+    cam.lookat();
     
 }
 

@@ -27,11 +27,12 @@ private:
     Window* win = nullptr;
 
 
-    void ModelDemo::toggle_cursor(Window& win);
+    void toggle_cursor(Window& win);
 
 public: 
 
-    bool init_demo(Window* win) override;
-    void update_demo() override;
-    void draw_demo() override;
+    bool init(Window* win) override;
+    void frame_start() override;
+    void update() override;
+    void draw() override;
 };

@@ -15,6 +15,8 @@ bool demo_init(Window* win);
 /* Internal state machine. Tells demo which specific demo to use */
 void load_demo(DemoType type);
 
+void demo_frame_start();
+
 void demo_update();
 
 void demo_draw();

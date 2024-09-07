@@ -6,7 +6,8 @@
 class FeatureDemo
 {
 public:
-    virtual bool init_demo(Window* win) = 0;
-    virtual void update_demo() = 0;
-    virtual void draw_demo() = 0;
+    virtual bool init(Window* win) = 0;
+    virtual void frame_start() = 0;
+    virtual void update() = 0;
+    virtual void draw() = 0;
 };

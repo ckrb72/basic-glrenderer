@@ -38,6 +38,8 @@ Window::Window(const std::string& title, uint32_t width, uint32_t height)
     }
     #endif
 
+    SDL_GL_SetSwapInterval(0);
+
     //Set up various OpenGL functionality
     glEnable(GL_DEPTH_TEST);
 
@@ -45,6 +47,8 @@ Window::Window(const std::string& title, uint32_t width, uint32_t height)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_MULTISAMPLE);
+
+    m_win_open = true;
 
     /*glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -72,12 +76,30 @@ void Window::swap_buffers()
     SDL_GL_SwapWindow(m_window);
 }
 
-uint32_t Window::get_width()
+uint32_t Window::get_width() const
 {
     return this->m_width;
 }
 
-uint32_t Window::get_height()
+uint32_t Window::get_height() const 
 {
     return this->m_height;
+}
+
+void Window::set_cursor_pos(uint32_t x, uint32_t y)
+{
+    SDL_WarpMouseInWindow(m_window, x, y);
+}
+
+void Window::set_cursor_relative(bool val)
+{
+    if(val)
+        SDL_SetRelativeMouseMode(SDL_TRUE);
+    else
+        SDL_SetRelativeMouseMode(SDL_FALSE);
+}
+
+void Window::set_close(bool val)
+{
+    m_win_open = !val;
 }

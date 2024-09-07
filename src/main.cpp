@@ -7,6 +7,9 @@
 #include "./gui/gui.h"
 #include "./core/input/input.h"
 #include "./core/engine_time.h"
+#include <graphics.h>
+#include "./demo/demo.h"
+#include <vector>
 
 
 const int WIN_WIDTH = 1920;
@@ -14,7 +17,7 @@ const int WIN_HEIGHT = 1080;
 
 bool show_cursor = false;
 
-static void toggle_cursor();
+static void toggle_cursor(Window& win);
 
 float delta = 0.0f;
 
@@ -25,38 +28,18 @@ int main()
 {
     Window win("Render Library Demo", WIN_WIDTH, WIN_HEIGHT);
 
-    SDL_GL_SetSwapInterval(0);
-
-    init_input();
+    init_input(&win);
 
     gui_setup(win);
 
+    if(!demo_init(&win))
+    {
+        return -1;
+    }
+
+
     Shader shader{};
-    if (!shader.load("./shader/default.vert", "./shader/default.frag"))
-    {
-        std::cerr << "Failed to load shader" << std::endl;
-    }
-
-    Shader normals{};
-    if (!normals.load("./shader/normals.vert", "./shader/normals.frag"))
-    {
-        std::cerr << "Failed to load shader" << std::endl;
-    }
-
-    Shader lighting{};
-    if(!lighting.load("./shader/light.vert", "./shader/light.frag"))
-    {
-        std::cerr << "Failed to load shader" << std::endl;
-    }
-
-    Shader world_space{};
-    if(!world_space.load("./shader/world_space.vert", "./shader/world_space.frag"))
-    {
-        std::cerr << "Failed to load shader" << std::endl;
-    }
-
-    Shader view_space{};
-    if(!view_space.load("./shader/view_space.vert", "./shader/view_space.frag"))
+    if (!shader.load("./shader/clip_space.vert", "./shader/clip_space.frag"))
     {
         std::cerr << "Failed to load shader" << std::endl;
     }
@@ -75,65 +58,50 @@ int main()
     lnal::vec3 pos = { 0.0, 0.0, 3.0 };
     lnal::vec3 lookat = { 0.0, 0.0 ,0.0 };
     lnal::vec3 up = { 0.0, 1.0, 0.0 };
-    cam.lookat(pos, lookat, up);
+    cam.lookat();
 
 
-    // Start demo with cursor not showing
-    SDL_SetRelativeMouseMode(SDL_TRUE);
+    win.set_cursor_relative(true);
 
 
     delta = calc_delta();
 
-
-    bool should_close = false;
-
     float yaw = -90.0f;
     float pitch = 0.0f;
     float sensitivity = 0.1f;
+    
 
-
-    while(!should_close)
+    while(!win.is_closed())
     {
         delta = calc_delta();
 
+        /* If we aren't showing the cursor, then place it in the middle of the screen */
+        if(!show_cursor)
+            win.set_cursor_pos(WIN_WIDTH / 2, WIN_HEIGHT / 2);
 
-        /* Handle Input */
-        SDL_Event event;
-        while(SDL_PollEvent(&event))
+
+        input_update();
+
+        if(!show_cursor)
         {
-            gui_process_event(&event);
-            switch(event.type)
-            {
-                case SDL_MOUSEMOTION:
-                    /* Do mouse motion stuff here */
-                    if(!show_cursor)
-                    {
-                        SDL_WarpMouseInWindow(win.get_handle(), WIN_WIDTH / 2, WIN_HEIGHT / 2);
-                        yaw += event.motion.xrel * sensitivity;
-                        pitch -= event.motion.yrel * sensitivity;
-                        if(pitch > 89.0f)
-                            pitch = 89.0f;
-                        if(pitch < -89.0f)
-                            pitch = -89.0f;
-                    }
-                    break;
-                case SDL_QUIT:
-                    should_close = true;
-                    break;
-                default:
-                    break;
-            }
+            yaw += Input.Mouse.dx * sensitivity;
+            pitch -= Input.Mouse.dy * sensitivity;
+            if(pitch > 89.0f)
+                pitch = 89.0f;
+            if(pitch < -89.0f)
+                pitch = -89.0f;
         }
 
-        update_keyboard_state();
-        const KeyState* keyboard = get_keyboard_state();
-
-        if(keyboard[SDL_SCANCODE_ESCAPE] == KEY_STATE_PRESSED)
+        if(Input.Keyboard[SDL_SCANCODE_ESCAPE] == KEY_STATE_PRESSED)
         {
-            toggle_cursor();
+            toggle_cursor(win);
         }
 
 
+        if(Input.Keyboard[SDL_SCANCODE_1] == KEY_STATE_PRESSED)
+        {
+            std::cout << "Pressed 1" << std::endl;
+        }
 
         // Camera look direction based on mouse movement
         lnal::vec3 look_dir{};
@@ -147,30 +115,34 @@ int main()
         // If adding a keyboard interaction here, don't forget to add the in update_keyboard_state()
         if(!show_cursor)
         {
-            if(keyboard[SDL_SCANCODE_A] == KEY_STATE_HELD)
+            if(Input.Keyboard[SDL_SCANCODE_A] == KEY_STATE_HELD)
                 cam_pos -= delta * lnal::cross(look_dir, cam_up);
 
-            if(keyboard[SDL_SCANCODE_S] == KEY_STATE_HELD)
+            if(Input.Keyboard[SDL_SCANCODE_S] == KEY_STATE_HELD)
                 cam_pos -= delta * look_dir;
 
-            if(keyboard[SDL_SCANCODE_D] == KEY_STATE_HELD)
+            if(Input.Keyboard[SDL_SCANCODE_D] == KEY_STATE_HELD)
                 cam_pos += delta * lnal::cross(look_dir, cam_up);
 
-            if(keyboard[SDL_SCANCODE_W] == KEY_STATE_HELD)
+            if(Input.Keyboard[SDL_SCANCODE_W] == KEY_STATE_HELD)
                 cam_pos += delta * look_dir;
 
-            if(keyboard[SDL_SCANCODE_SPACE] == KEY_STATE_HELD)
+            if(Input.Keyboard[SDL_SCANCODE_SPACE] == KEY_STATE_HELD)
                 cam_pos += delta * cam_up;
 
-            if(keyboard[SDL_SCANCODE_LSHIFT] == KEY_STATE_HELD)
+            if(Input.Keyboard[SDL_SCANCODE_LSHIFT] == KEY_STATE_HELD)
                 cam_pos -= delta * cam_up;
         }
 
-        cam.lookat(cam_pos, cam_pos + look_dir, cam_up);
+        cam.position = cam_pos;
+        cam.forward = cam_pos + look_dir;
+        cam.up = cam_up;
 
+        cam.lookat();
+        
+        gui_create_frame();
 
         /* Draw Stuff */
-        gui_create_frame();
 
         win.clear();
 
@@ -192,14 +164,11 @@ int main()
 }
 
 
-static void toggle_cursor()
+static void toggle_cursor(Window& win)
 {
     show_cursor = !show_cursor;
-    SDL_bool show;
-    if(show_cursor)
-        show = SDL_FALSE;
-    else
-        show = SDL_TRUE;
-    
-    SDL_SetRelativeMouseMode(show);
+
+    /* If we want to show cursor, then we want set relative off */
+    /* If we don't want to show cursor, then we want set relative on */
+    win.set_cursor_relative(!show_cursor);
 }

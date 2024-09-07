@@ -130,6 +130,8 @@ static void gen_frame()
 
     if(ImGui::CollapsingHeader("Demos"))
     {
+        /* FIXME: */
+        /* These should be selectables not buttons */
         ImVec2 placeholder(0.0, 0.0);
         if(ImGui::Button("Textures"))
         {
@@ -208,14 +210,17 @@ static void gen_frame()
         }
     }
 
+    static bool wireframe = false;
+
     if(model_demo)
     {
         /* Choose models here */
         /* Choose shaders too */
+        /* Set scale and stuff too */
 
         ImGui::SeparatorText("Model");
 
-        static bool selected = false;
+        static bool selected = true;
 
         if(ImGui::Selectable("Model 1", selected))
         {
@@ -223,7 +228,9 @@ static void gen_frame()
         }
 
         ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
+        ImGui::DragFloat3("Scale", f_vec, 0.01, 0.001f, 5.0f, "%.3f", ImGuiSliderFlags_None);
         ImGui::DragFloat("Rotation", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
+        ImGui::Checkbox("Wireframe", &wireframe);
 
 
     }

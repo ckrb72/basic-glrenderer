@@ -27,7 +27,7 @@ private:
     Window* win = nullptr;
 
 
-    void toggle_cursor(Window& win);
+    void toggle_cursor();
 
 public: 
 

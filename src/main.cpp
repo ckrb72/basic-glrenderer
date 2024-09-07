@@ -9,7 +9,6 @@
 #include "./core/engine_time.h"
 #include <graphics.h>
 #include "./demo/demo.h"
-#include <vector>
 
 
 const int WIN_WIDTH = 1920;
@@ -18,8 +17,6 @@ const int WIN_HEIGHT = 1080;
 bool show_cursor = false;
 
 static void toggle_cursor(Window& win);
-
-float delta = 0.0f;
 
 lnal::vec3 cam_pos = { 0.0f, 0.0f, 5.0f};
 lnal::vec3 cam_up = { 0.0f, 1.0f, 0.0f };
@@ -65,15 +62,13 @@ int main()
 
 
     calc_delta();
-
-    float yaw = -90.0f;
-    float pitch = 0.0f;
-    float sensitivity = 0.1f;
     
 
     while(!win.is_closed())
     {
         calc_delta();
+
+        // demo_frame_start();
 
         /* If we aren't showing the cursor, then place it in the middle of the screen */
         if(!show_cursor)
@@ -82,14 +77,16 @@ int main()
 
         input_update();
 
+        // demo_update();
+
         if(!show_cursor)
         {
-            yaw += Input.Mouse.dx * sensitivity;
-            pitch -= Input.Mouse.dy * sensitivity;
-            if(pitch > 89.0f)
-                pitch = 89.0f;
-            if(pitch < -89.0f)
-                pitch = -89.0f;
+            cam.yaw += Input.Mouse.dx * cam.sensitivity;
+            cam.pitch -= Input.Mouse.dy * cam.sensitivity;
+            if(cam.pitch > 89.0f)
+                cam.pitch = 89.0f;
+            if(cam.pitch < -89.0f)
+                cam.pitch = -89.0f;
         }
 
         if(Input.Keyboard[SDL_SCANCODE_ESCAPE] == KEY_STATE_PRESSED)
@@ -97,17 +94,11 @@ int main()
             toggle_cursor(win);
         }
 
-
-        if(Input.Keyboard[SDL_SCANCODE_1] == KEY_STATE_PRESSED)
-        {
-            std::cout << "Pressed 1" << std::endl;
-        }
-
         // Camera look direction based on mouse movement
         lnal::vec3 look_dir{};
-        look_dir[0] = cos(lnal::radians(yaw)) * cos(lnal::radians(pitch));
-        look_dir[1] = sin(lnal::radians(pitch));
-        look_dir[2] = sin(lnal::radians(yaw)) * cos(lnal::radians(pitch));
+        look_dir[0] = cos(lnal::radians(cam.yaw)) * cos(lnal::radians(cam.pitch));
+        look_dir[1] = sin(lnal::radians(cam.pitch));
+        look_dir[2] = sin(lnal::radians(cam.yaw)) * cos(lnal::radians(cam.pitch));
 
         look_dir.normalize();
 
@@ -116,33 +107,31 @@ int main()
         if(!show_cursor)
         {
             if(Input.Keyboard[SDL_SCANCODE_A] == KEY_STATE_HELD)
-                cam_pos -= Time.delta * lnal::cross(look_dir, cam_up);
+                cam.position -= Time.delta * lnal::cross(look_dir, cam.up);
 
             if(Input.Keyboard[SDL_SCANCODE_S] == KEY_STATE_HELD)
-                cam_pos -= Time.delta * look_dir;
+                cam.position -= Time.delta * look_dir;
 
             if(Input.Keyboard[SDL_SCANCODE_D] == KEY_STATE_HELD)
-                cam_pos += Time.delta * lnal::cross(look_dir, cam_up);
+                cam.position += Time.delta * lnal::cross(look_dir, cam.up);
 
             if(Input.Keyboard[SDL_SCANCODE_W] == KEY_STATE_HELD)
-                cam_pos += Time.delta * look_dir;
+                cam.position += Time.delta * look_dir;
 
             if(Input.Keyboard[SDL_SCANCODE_SPACE] == KEY_STATE_HELD)
-                cam_pos += Time.delta * cam_up;
+                cam.position += Time.delta * cam.up;
 
             if(Input.Keyboard[SDL_SCANCODE_LSHIFT] == KEY_STATE_HELD)
-                cam_pos -= Time.delta * cam_up;
+                cam.position -= Time.delta * cam.up;
         }
-
-        cam.position = cam_pos;
-        cam.forward = cam_pos + look_dir;
-        cam.up = cam_up;
-
+        cam.forward = cam.position + look_dir;
         cam.lookat();
         
         gui_create_frame();
 
         /* Draw Stuff */
+
+        // demo_draw();
 
         win.clear();
 

@@ -56,6 +56,9 @@ void ModelDemo::update()
 {
     /* Update cam position */
 
+    if(Input.Keyboard[SDL_SCANCODE_ESCAPE] == KEY_STATE_PRESSED)
+        toggle_cursor();
+
     if(!show_cursor)
     {
         cam.yaw += Input.Mouse.dx * cam.sensitivity;
@@ -103,11 +106,11 @@ void ModelDemo::update()
 
 
 
-void ModelDemo::toggle_cursor(Window& win)
+void ModelDemo::toggle_cursor()
 {
     show_cursor = !show_cursor;
 
     /* If we want to show cursor, then we want set relative off */
     /* If we don't want to show cursor, then we want set relative on */
-    win.set_cursor_relative(!show_cursor);
+    win->set_cursor_relative(!show_cursor);
 }

@@ -136,6 +136,7 @@ static void gen_frame()
         if(ImGui::Button("Textures"))
         {
             texture_demo = !texture_demo;
+            /* Send EVENT_DEMO_SWITCH to event dispatcher and then switch demo */
         }
 
 
@@ -227,8 +228,13 @@ static void gen_frame()
             selected = !selected;
         }
 
-        ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
-        ImGui::DragFloat3("Scale", f_vec, 0.01, 0.001f, 5.0f, "%.3f", ImGuiSliderFlags_None);
+        if(ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None))
+        {
+            std::cout << "Position changed" << std::endl;
+            /* Send EVENT_POSITION_CHANGED to event dispatcher */
+        }
+
+        ImGui::DragFloat("Scale", &f_scalar, 0.01, 0.001f, 5.0f, "%.3f", ImGuiSliderFlags_None);
         ImGui::DragFloat("Rotation", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
         ImGui::Checkbox("Wireframe", &wireframe);
 

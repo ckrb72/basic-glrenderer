@@ -4,6 +4,7 @@
 #include "../core/Model.h"
 #include "../core/Window.h"
 #include "../core/Shader.h"
+#include "../math/lnal.h"
 #include <vector>
 
 
@@ -20,12 +21,12 @@ private:
     std::vector<std::shared_ptr<Model>> models{};
     std::shared_ptr<Model> cur_model = nullptr;
 
-    std::vector<Shader> shaders{};
-    Shader* cur_shader = nullptr;
-
+    std::vector<std::shared_ptr<Shader>> shaders{};
+    std::shared_ptr<Shader> cur_shader;
 
     Window* win = nullptr;
 
+    lnal::mat4 model{};
 
     void toggle_cursor();
 

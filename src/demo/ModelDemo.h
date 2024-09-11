@@ -26,9 +26,15 @@ private:
 
     Window* win = nullptr;
 
-    lnal::mat4 model{};
+    lnal::vec3 model_pos{ 0.0, -1.0, 0.0 };
+    float model_scale = 0.01;
+    float model_rotate_angle = 0.0f;
+    lnal::vec3 model_rotate_axis{ 0.0, 0.0, 1.0 };
+
+    bool wireframe = false;
 
     void toggle_cursor();
+    void toggle_wireframe();
 
 public: 
 

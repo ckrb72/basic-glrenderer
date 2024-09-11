@@ -28,6 +28,12 @@ private:
     lnal::vec3 model_specular{0.5, 0.5, 0.5};
     float model_shininess = 8.0;
 
+    lnal::vec3 light_color{ 1.0, 1.0, 1.0 };
+    lnal::vec3 model_pos{ 0.0, -1.0, 0.0 };
+    float model_scale = 0.01;
+    float model_rotate_angle = 0.0f;
+    lnal::vec3 model_rotate_axis{ 0.0, 0.0, 1.0 };
+
     void toggle_cursor();
     bool show_cursor = true;
 

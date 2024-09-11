@@ -2,6 +2,9 @@
 #include <imgui.h>
 #include "../core/input/input.h"
 #include "../core/engine_time.h"
+#include "../math/lnal.h"
+#include <cmath>
+
 
 bool TextureDemo::init(Window* win)
 {

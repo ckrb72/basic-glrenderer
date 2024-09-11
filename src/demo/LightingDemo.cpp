@@ -103,6 +103,10 @@ void LightingDemo::update()
 
 void LightingDemo::draw()
 {
+    lnal::mat4 model(1.0);
+    lnal::scale(model, model_scale);
+    lnal::rotate(model, model_rotate_axis, lnal::radians(model_rotate_angle));
+    lnal::translate_relative(model, model_pos);
 
     light_shader.bind();
     light_shader.set_mat4fv("model", model.data());
@@ -117,8 +121,11 @@ void LightingDemo::draw()
     light_shader.set_vec3fv("material.specular", model_specular.data());
     light_shader.set_float("material.shininess", model_shininess);
 
+    lnal::vec3 light_diffuse = 0.2 * light_color;
+    lnal::vec3 light_specular = 0.1 * light_color;
+
     light_shader.set_vec3fv("light.position", light_pos.data());
-    light_shader.set_vec3fv("light.ambient", light_ambient.data());
+    light_shader.set_vec3fv("light.ambient", light_color.data());
     light_shader.set_vec3fv("light.diffuse", light_diffuse.data());
     light_shader.set_vec3fv("light.specular", light_specular.data());
     jupiter.draw(light_shader);
@@ -140,15 +147,23 @@ void LightingDemo::on_load()
 
 void LightingDemo::gui_create_frame()
 {
-    static float f_scalar = 0.0f;
-    static float f_vec[3];
-    static float light_color[3];
 
+    static float f_scalar;
+    ImGui::Spacing();
     ImGui::SeparatorText("Model");
-    ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
-    ImGui::DragFloat("Rotation", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
+
+    ImGui::DragFloat3("Position", model_pos.data(), 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
+    ImGui::DragFloat("Scale", &model_scale, 0.001, 0.001f, 5.0f, "%.3f", ImGuiSliderFlags_None);
+
+    ImGui::Spacing();
+
+    ImGui::DragFloat("Rotation", &model_rotate_angle, 0.5, 0.0f, 360.0f, "%.3f", ImGuiSliderFlags_WrapAround);
+    ImGui::DragFloat3("Rotation Axis", model_rotate_axis.data(), 0.05, 0.0, 10.0, "%.3f", ImGuiSliderFlags_None);
 
     ImGui::SeparatorText("Light");
-    ImGui::DragFloat("Position", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
-    ImGui::ColorEdit3("Color", light_color);
+    
+    /* FIXME: */
+    /* This is doing some weird stuff for some reason */
+    //ImGui::DragFloat3("Position", light_pos.data(), 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
+    ImGui::ColorEdit3("Color", light_color.data());
 }

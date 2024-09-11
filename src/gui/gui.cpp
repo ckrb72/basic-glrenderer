@@ -170,36 +170,6 @@ static void gen_frame()
     static int i_scalar;
 
 
-    if(selected_demo == SPRITESHEET)
-    {
-        ImGui::SeparatorText("SpriteSheet");
-        ImGui::DragInt("Clip Width", &i_scalar, 1, 0, 255, "%d", ImGuiSliderFlags_None);
-        ImGui::DragInt("Clip Height", &i_scalar, 1, 0, 255, "%d", ImGuiSliderFlags_None);
-
-        ImGui::Spacing(); 
-
-        ImGui::DragInt("Clip X", &i_scalar, 1, 0, 255, "%d", ImGuiSliderFlags_None);
-        ImGui::DragInt("Clip Y", &i_scalar, 1, 0, 255, "%d", ImGuiSliderFlags_None);
-
-        std::string pause_str;
-        if(paused)
-            pause_str = "Play";
-        else
-            pause_str = "Pause";
-
-        if(ImGui::Button(pause_str.c_str()))
-        {
-            paused = !paused;
-        }
-
-        ImGui::SameLine();
-
-        if(ImGui::Button("Reset"))
-        {
-            /* Reset values to default */
-        }
-    }
-
     demo_gui_create_frame();
 
     ImGui::End();

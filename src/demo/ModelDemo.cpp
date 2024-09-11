@@ -157,3 +157,8 @@ void ModelDemo::toggle_cursor()
     /* If we don't want to show cursor, then we want set relative on */
     win->set_cursor_relative(!show_cursor);
 }
+
+void ModelDemo::on_load()
+{
+
+}

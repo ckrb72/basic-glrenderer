@@ -18,7 +18,7 @@ private:
     lnal::mat4 model{};
 
     //lnal::vec3 light_color{ 0.1, 0.1, 1.0};
-    lnal::vec3 light_pos{1.0, 1.0, 1.0};
+    lnal::vec3 light_pos{1.0, 0.0, 1.0};
     lnal::vec3 light_ambient{1.0, 1.0, 1.0};
     lnal::vec3 light_diffuse{0.2, 0.2, 0.2};
     lnal::vec3 light_specular{0.1, 0.1, 0.1};
@@ -29,13 +29,14 @@ private:
     float model_shininess = 8.0;
 
     void toggle_cursor();
-    bool show_cursor = false;
+    bool show_cursor = true;
 
 public:
 
-    bool init(Window* win);
-    void frame_start();
-    void update();
-    void draw();
+    bool init(Window* win) override;
+    void frame_start() override;
+    void update() override;
+    void draw() override;
+    void on_load() override;
 
 };

@@ -31,7 +31,7 @@ bool demo_init(Window* win)
     }
 
 
-    cur_demo = demos[DEMO_LIGHTING];
+    cur_demo = demos[DEMO_MODEL];
 
 
     return true;
@@ -40,6 +40,7 @@ bool demo_init(Window* win)
 void load_demo(DemoType type)
 {
     cur_demo = demos[type];
+    cur_demo->on_load();
 }
 
 void demo_frame_start()

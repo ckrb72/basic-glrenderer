@@ -2,6 +2,7 @@
 #include <imgui.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_opengl3.h>
+#include "../demo/demo.h"
 #include <iostream>
 
 static void gen_frame();
@@ -90,7 +91,7 @@ static void gen_frame()
             ImGui::Spacing();
 
             ImGui::SeparatorText("Features");
-            ImGui::BulletText("Blinn Shading");
+            ImGui::BulletText("Phong Shading");
             ImGui::BulletText("Texture Loading");
             ImGui::BulletText("Model Loading");
             ImGui::BulletText("Spritesheet Animations");
@@ -141,21 +142,25 @@ static void gen_frame()
         if(ImGui::Selectable("Model", selected_demo == MODEL) && selected_demo != MODEL)
         {
             selected_demo = 0;
+            load_demo(DEMO_MODEL);
         }
 
         if(ImGui::Selectable("Lighting", selected_demo == LIGHTING) && selected_demo != LIGHTING)
         {
             selected_demo = 1;
+            load_demo(DEMO_LIGHTING);
         }
 
         if(ImGui::Selectable("Textures", selected_demo == TEXTURE) && selected_demo != TEXTURE)
         {
             selected_demo = 2;
+            load_demo(DEMO_TEXTURE);
         }
 
         if(ImGui::Selectable("Spritesheet", selected_demo == SPRITESHEET) && selected_demo != SPRITESHEET)
         {
             selected_demo = 3;
+            load_demo(DEMO_SPRITESHEET);
         }
     }
 

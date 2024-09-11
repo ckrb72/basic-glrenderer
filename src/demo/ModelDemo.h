@@ -36,4 +36,5 @@ public:
     void frame_start() override;
     void update() override;
     void draw() override;
+    void on_load() override;
 };

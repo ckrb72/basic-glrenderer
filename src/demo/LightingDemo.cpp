@@ -3,12 +3,18 @@
 #include "../core/input/input.h"
 #include "../core/engine_time.h"
 
+/*
+FIXME:
+Want to put demo specific gui stuff in here so we have access to the variables. I guess thats the best way to do it.
+
+*/
+
 
 bool LightingDemo::init(Window* win)
 {
     this->win = win;
 
-    cam.gen_perspective(PI / 4, (float)win->get_width() / (float)win->get_height(), 0.1, 100.0);
+    cam.gen_perspective(PI / 2, (float)1920.0/ (float)1080.0, 0.1, 100.0);
 
     if(!jupiter.load("./assets/model/jupiter.obj"))
     {
@@ -24,12 +30,12 @@ bool LightingDemo::init(Window* win)
 
 
 
-    cam.position = lnal::vec3{ 0.0, 0.0, 3.0 };
-    cam.forward = lnal::vec3{ 0.0, 0.0, 0.0 };
-    cam.up = lnal::vec3{ 0.0, 1.0, 0.0 };
-    cam.sensitivity = 0.1;
+    cam.position = { 0.0, 0.0, 5.0 };
+    cam.forward = { 0.0, 0.0, 0.0 };
+    cam.up = { 0.0, 1.0, 0.0 };
 
     lnal::scale(model, 0.01);
+    lnal::translate_relative(model, lnal::vec3(0.0, -1.0, 0.0));
 
     return true;
 }
@@ -124,4 +130,9 @@ void LightingDemo::toggle_cursor()
     /* If we want to show cursor, then we want set relative off */
     /* If we don't want to show cursor, then we want set relative on */
     win->set_cursor_relative(!show_cursor);
+}
+
+void LightingDemo::on_load()
+{
+
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../core/input/input.h"
 #include "../core/engine_time.h"
+#include <imgui.h>
 
 /*
 FIXME:
@@ -135,4 +136,19 @@ void LightingDemo::toggle_cursor()
 void LightingDemo::on_load()
 {
 
+}
+
+void LightingDemo::gui_create_frame()
+{
+    static float f_scalar = 0.0f;
+    static float f_vec[3];
+    static float light_color[3];
+
+    ImGui::SeparatorText("Model");
+    ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
+    ImGui::DragFloat("Rotation", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
+
+    ImGui::SeparatorText("Light");
+    ImGui::DragFloat("Position", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
+    ImGui::ColorEdit3("Color", light_color);
 }

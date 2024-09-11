@@ -2,6 +2,8 @@
 #include "FeatureDemo.h"
 #include "ModelDemo.h"
 #include "LightingDemo.h"
+#include "TextureDemo.h"
+#include "SpritesheetDemo.h"
 #include <iostream>
 #include <map>
 #include <memory>
@@ -30,6 +32,20 @@ bool demo_init(Window* win)
         return false;
     }
 
+    demos[DEMO_TEXTURE] = std::make_shared<TextureDemo>();
+    if(!demos[DEMO_TEXTURE]->init(win))
+    {
+        std::cerr << "Failed to load Texture Demo" << std::endl;
+        return false;
+    }
+
+    demos[DEMO_SPRITESHEET] = std::make_shared<SpritesheetDemo>();
+    if(!demos[DEMO_SPRITESHEET]->init(win))
+    {
+        std::cerr << "Failed to load Spritesheet Demo" << std::endl;
+        return false;
+    }
+
 
     cur_demo = demos[DEMO_MODEL];
 
@@ -52,6 +68,11 @@ void demo_frame_start()
 void demo_update()
 {
     cur_demo->update();
+}
+
+void demo_gui_create_frame()
+{
+    cur_demo->gui_create_frame();
 }
 
 void demo_draw()

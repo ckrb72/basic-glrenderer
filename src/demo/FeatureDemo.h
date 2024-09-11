@@ -11,4 +11,5 @@ public:
     virtual void update() = 0;
     virtual void draw() = 0;
     virtual void on_load() = 0;
+    virtual void gui_create_frame() = 0;
 };

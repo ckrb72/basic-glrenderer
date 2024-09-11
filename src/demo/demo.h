@@ -19,6 +19,8 @@ void demo_frame_start();
 
 void demo_update();
 
+void demo_gui_create_frame();
+
 void demo_draw();
 
 void demo_destroy();

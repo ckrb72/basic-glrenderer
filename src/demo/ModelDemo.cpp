@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../core/input/input.h"
 #include "../core/engine_time.h"
+#include <imgui.h>
 
 bool ModelDemo::init(Window* win)
 {
@@ -161,4 +162,33 @@ void ModelDemo::toggle_cursor()
 void ModelDemo::on_load()
 {
 
+}
+
+void ModelDemo::gui_create_frame()
+{
+
+    static float f_scalar = 0.0f;
+    static float f_vec[3];
+    static bool wireframe = false;
+        /* Choose models here */
+        /* Choose shaders too */
+        /* Set scale and stuff too */
+
+        //ImGui::SeparatorText("Model");
+
+        static bool selected = true;
+
+        if(ImGui::Selectable("Model 1", selected))
+        {
+            selected = !selected;
+        }
+
+        if(ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None))
+        {
+            /* Send EVENT_POSITION_CHANGED to event dispatcher */
+        }
+
+        ImGui::DragFloat("Scale", &f_scalar, 0.01, 0.001f, 5.0f, "%.3f", ImGuiSliderFlags_None);
+        ImGui::DragFloat("Rotation", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
+        ImGui::Checkbox("Wireframe", &wireframe);
 }

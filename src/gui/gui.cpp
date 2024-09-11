@@ -169,23 +169,6 @@ static void gen_frame()
     static float f_scalar;
     static int i_scalar;
 
-    
-    if(selected_demo == LIGHTING)
-    {
-        ImGui::SeparatorText("Model");
-        ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
-        ImGui::DragFloat("Rotation", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
-
-        ImGui::SeparatorText("Light");
-        ImGui::DragFloat("Position", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
-        ImGui::ColorEdit3("Color", light_color);
-    }
-
-    if(selected_demo == TEXTURE)
-    {
-        ImGui::SeparatorText("Texture");
-        ImGui::ColorEdit3("Color", light_color);
-    }
 
     if(selected_demo == SPRITESHEET)
     {
@@ -217,33 +200,7 @@ static void gen_frame()
         }
     }
 
-    static bool wireframe = false;
-
-    if(selected_demo == MODEL)
-    {
-        /* Choose models here */
-        /* Choose shaders too */
-        /* Set scale and stuff too */
-
-        //ImGui::SeparatorText("Model");
-
-        static bool selected = true;
-
-        if(ImGui::Selectable("Model 1", selected))
-        {
-            selected = !selected;
-        }
-
-        if(ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None))
-        {
-            std::cout << "Position changed" << std::endl;
-            /* Send EVENT_POSITION_CHANGED to event dispatcher */
-        }
-
-        ImGui::DragFloat("Scale", &f_scalar, 0.01, 0.001f, 5.0f, "%.3f", ImGuiSliderFlags_None);
-        ImGui::DragFloat("Rotation", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
-        ImGui::Checkbox("Wireframe", &wireframe);
-    }
+    demo_gui_create_frame();
 
     ImGui::End();
 }

@@ -37,4 +37,5 @@ public:
     void update() override;
     void draw() override;
     void on_load() override;
+    void gui_create_frame() override;
 };

@@ -6,12 +6,19 @@
 
 static void gen_frame();
 
-
-static bool light_demo = false;
-static bool texture_demo = false;
-static bool model_demo = false;
-static bool spritesheet_demo = false;
+static int selected_demo = 0;
 static bool paused = false;
+
+enum SELECTED_DEMO
+{
+    MODEL,
+    LIGHTING,
+    TEXTURE,
+    SPRITESHEET
+};
+
+
+static bool booleans[5] = {0};
 
 void gui_setup(Window& win)
 {
@@ -130,41 +137,35 @@ static void gen_frame()
 
     if(ImGui::CollapsingHeader("Demos"))
     {
-        /* FIXME: */
-        /* These should be selectables not buttons */
-        ImVec2 placeholder(0.0, 0.0);
-        if(ImGui::Button("Textures"))
+
+        if(ImGui::Selectable("Model", selected_demo == MODEL) && selected_demo != MODEL)
         {
-            texture_demo = !texture_demo;
-            /* Send EVENT_DEMO_SWITCH to event dispatcher and then switch demo */
+            selected_demo = 0;
         }
 
-
-        if(ImGui::Button("Lighting"))
+        if(ImGui::Selectable("Lighting", selected_demo == LIGHTING) && selected_demo != LIGHTING)
         {
-            light_demo = !light_demo;
+            selected_demo = 1;
         }
 
-
-        if(ImGui::Button("Models"))
+        if(ImGui::Selectable("Textures", selected_demo == TEXTURE) && selected_demo != TEXTURE)
         {
-            model_demo = !model_demo;
+            selected_demo = 2;
         }
 
-        if(ImGui::Button("Spritesheet"))
+        if(ImGui::Selectable("Spritesheet", selected_demo == SPRITESHEET) && selected_demo != SPRITESHEET)
         {
-            spritesheet_demo = !spritesheet_demo;
+            selected_demo = 3;
         }
     }
 
-    ImGui::Spacing();
+    static float f_vec[3];
+    static float light_color[3];
+    static float f_scalar;
+    static int i_scalar;
 
-    static float f_vec[3] = { 0.0f, 0.0f, 0.0f };
-    static float light_color[3] = { 0.0f, 0.0f, 0.0f };
-    static float f_scalar = 0.0f;
-    static int i_scalar = 0;
-
-    if(light_demo)
+    
+    if(selected_demo == LIGHTING)
     {
         ImGui::SeparatorText("Model");
         ImGui::DragFloat3("Position", f_vec, 0.05, -100.0f, 100.0f, "%.3f", ImGuiSliderFlags_None);
@@ -175,13 +176,13 @@ static void gen_frame()
         ImGui::ColorEdit3("Color", light_color);
     }
 
-    if(texture_demo)
+    if(selected_demo == TEXTURE)
     {
         ImGui::SeparatorText("Texture");
         ImGui::ColorEdit3("Color", light_color);
     }
 
-    if(spritesheet_demo)
+    if(selected_demo == SPRITESHEET)
     {
         ImGui::SeparatorText("SpriteSheet");
         ImGui::DragInt("Clip Width", &i_scalar, 1, 0, 255, "%d", ImGuiSliderFlags_None);
@@ -213,13 +214,13 @@ static void gen_frame()
 
     static bool wireframe = false;
 
-    if(model_demo)
+    if(selected_demo == MODEL)
     {
         /* Choose models here */
         /* Choose shaders too */
         /* Set scale and stuff too */
 
-        ImGui::SeparatorText("Model");
+        //ImGui::SeparatorText("Model");
 
         static bool selected = true;
 
@@ -237,8 +238,6 @@ static void gen_frame()
         ImGui::DragFloat("Scale", &f_scalar, 0.01, 0.001f, 5.0f, "%.3f", ImGuiSliderFlags_None);
         ImGui::DragFloat("Rotation", &f_scalar, 0.1, -360.0f, 360.0f, "%.3f", ImGuiSliderFlags_None);
         ImGui::Checkbox("Wireframe", &wireframe);
-
-
     }
 
     ImGui::End();

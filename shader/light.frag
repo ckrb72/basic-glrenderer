@@ -38,7 +38,7 @@ void main()
     vec3 light_dir = (light.position - frag_pos);
 
     float diff = max(dot(norm, light_dir), 0.0);
-    vec3 diffuse = (diff * material.diffuse) * light_color;
+    vec3 diffuse = (diff * material.diffuse) * light.diffuse;
 
     //Specular
     
@@ -48,7 +48,7 @@ void main()
     vec3 light_reflection = reflect(-light_dir, norm);
 
     float spec = pow(max(dot(cam_dir, light_reflection), 0.0), material.shininess);
-    vec3 specular = (material.specular * spec) * light_color;
+    vec3 specular = (material.specular * spec) * light.specular;
 
     vec3 result = (ambient + diffuse + specular);
     final_color = vec4(result, 1.0);

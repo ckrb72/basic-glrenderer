@@ -1,101 +1,49 @@
-#include "ModelDemo.h"
+#include "LightingDemo.h"
 #include <iostream>
 #include "../core/input/input.h"
 #include "../core/engine_time.h"
 
-bool ModelDemo::init(Window* win)
+
+bool LightingDemo::init(Window* win)
 {
     this->win = win;
 
+    cam.gen_perspective(PI / 4, (float)win->get_width() / (float)win->get_height(), 0.1, 100.0);
 
-    float aspect_ratio = (float)win->get_width() / (float)win->get_height();
-
-    cam.gen_perspective(PI / 2, (float)1920.0/ (float)1080.0, 0.1, 100.0);
-
-    std::shared_ptr<Model> jupiter = std::make_shared<Model>();
-    if(!jupiter->load("./assets/model/jupiter.obj"))
+    if(!jupiter.load("./assets/model/jupiter.obj"))
     {
         std::cerr << "Failed to load jupiter model" << std::endl;
         return false;
     }
 
-    models.push_back(jupiter);
-
-    std::shared_ptr<Model> cube = std::make_shared<Model>();
-    if(!cube->load("./assets/model/cube.fbx"))
+    if(!light_shader.load("./shader/light.vert", "./shader/light.frag"))
     {
-        std::cerr << "Failed to load cube" << std::endl;
+        std::cerr << "Failed to load Lighting Shader" << std::endl;
         return false;
     }
 
-    models.push_back(cube);
-
-    std::shared_ptr<Model> house = std::make_shared<Model>();
-    if(!house->load("./assets/model/house.fbx"))
-    {
-        std::cerr << "Failed to load house" << std::endl;
-    }
-
-    models.push_back(house);
-
-    std::shared_ptr<Shader> normals = std::make_shared<Shader>();
-    if(!normals->load("./shader/normals.vert", "./shader/normals.frag"))
-    {
-        std::cerr << "Failed to load normals shader" << std::endl;
-        return false;
-    }
-
-    shaders.push_back(normals);
-
-    std::shared_ptr<Shader> world_space = std::make_shared<Shader>();
-    if(!world_space->load("./shader/world_space.vert", "./shader/world_space.frag"))
-    {
-        std::cerr << "Failed to load world_space shader" << std::endl;
-        return false;
-    }
-
-    shaders.push_back(world_space);
 
 
-    cur_model = models[0];
-    cur_shader = shaders[0];
-
-    cam.position = { 0.0, 0.0, 3.0 };
-    cam.forward = { 0.0, 0.0, 0.0 };
-    cam.up = { 0.0, 1.0, 0.0 };
+    cam.position = lnal::vec3{ 0.0, 0.0, 3.0 };
+    cam.forward = lnal::vec3{ 0.0, 0.0, 0.0 };
+    cam.up = lnal::vec3{ 0.0, 1.0, 0.0 };
+    cam.sensitivity = 0.1;
 
     lnal::scale(model, 0.01);
 
     return true;
 }
 
-void ModelDemo::draw()
-{
-
-    /* Draw currently selected model with currently selected shader */
-
-    lnal::mat4 model(1.0);
-    lnal::scale(model, 0.01);
-    lnal::translate_relative(model, lnal::vec3(0.0, -1.0, -2.0));
-
-    cur_shader->bind();
-    cur_shader->set_mat4fv("model", model.data());
-    cur_shader->set_mat4fv("view", cam.get_view());
-    cur_shader->set_mat4fv("projection", cam.get_projection());
-    cur_model->draw(*cur_shader);
-
-}
-
-void ModelDemo::frame_start()
+void LightingDemo::frame_start()
 {
     /* If we aren't showing the cursor, then place it in the middle of the screen */
     if(!show_cursor)
         win->set_cursor_pos(win->get_width() / 2, win->get_height() / 2);
 }
 
-void ModelDemo::update()
+void LightingDemo::update()
 {
-    /* Update cam position */
+/* Update cam position */
 
     if(!show_cursor)
     {
@@ -144,12 +92,32 @@ void ModelDemo::update()
     }
     cam.forward = cam.position + look_dir;
     cam.lookat();
-    
 }
 
+void LightingDemo::draw()
+{
 
+    light_shader.bind();
+    light_shader.set_mat4fv("model", model.data());
+    light_shader.set_mat4fv("view", cam.get_view());
+    light_shader.set_mat4fv("projection", cam.get_projection());
 
-void ModelDemo::toggle_cursor()
+    //light_shader.set_vec3fv("light_color", light_color.data());
+    light_shader.set_vec3fv("cam_pos", cam.position.data());
+
+    light_shader.set_vec3fv("material.ambient", model_ambient.data());
+    light_shader.set_vec3fv("material.diffuse", model_diffuse.data());
+    light_shader.set_vec3fv("material.specular", model_specular.data());
+    light_shader.set_float("material.shininess", model_shininess);
+
+    light_shader.set_vec3fv("light.position", light_pos.data());
+    light_shader.set_vec3fv("light.ambient", light_ambient.data());
+    light_shader.set_vec3fv("light.diffuse", light_diffuse.data());
+    light_shader.set_vec3fv("light.specular", light_specular.data());
+    jupiter.draw(light_shader);
+}
+
+void LightingDemo::toggle_cursor()
 {
     show_cursor = !show_cursor;
 

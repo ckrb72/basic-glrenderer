@@ -1,6 +1,7 @@
 #include "demo.h"
 #include "FeatureDemo.h"
 #include "ModelDemo.h"
+#include "LightingDemo.h"
 #include <iostream>
 #include <map>
 #include <memory>
@@ -22,8 +23,15 @@ bool demo_init(Window* win)
         return false;
     }
 
+    demos[DEMO_LIGHTING] = std::make_shared<LightingDemo>();
+    if(!demos[DEMO_LIGHTING]->init(win))
+    {
+        std::cerr << "Failed to load Lighting Demo" << std::endl;
+        return false;
+    }
 
-    cur_demo = demos[DEMO_MODEL];
+
+    cur_demo = demos[DEMO_LIGHTING];
 
 
     return true;

@@ -29,7 +29,7 @@ private:
     lnal::vec3 model_pos{ 0.0, -1.0, 0.0 };
     float model_scale = 0.01;
     float model_rotate_angle = 0.0f;
-    lnal::vec3 model_rotate_axis{ 0.0, 0.0, 1.0 };
+    lnal::vec3 model_rotate_axis{ 0.0, 1.0, 0.0 };
 
     bool wireframe = false;
 

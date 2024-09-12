@@ -18,8 +18,6 @@ Texture::~Texture()
 
 bool Texture::load(const std::string& filepath)
 {
-
-    std::cout << filepath << std::endl;
     int32_t width, height, channels;
 
     #if defined(GPU_FLIP_TEX)

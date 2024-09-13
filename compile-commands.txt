@@ -1,4 +1,4 @@
 Windows:
 g++ imgui/*.cpp src/gui/*.cpp src/*.cpp src/core/*.cpp src/core/input/*.cpp src/demo/*.cpp src/math/*.cpp src/*.c -DDEBUG -o main -I ./dependencies/include -I ./imgui -I ./dependencies/WinInclude -L ./dependencies/lib -lmingw32 -lSDL2main -lSDL2 -lassimp -lsoloud_static -lwinmm -std=c++2a 
 Mac:
-g++ src/gui/*.cpp imgui/*.cpp  src/*.cpp src/*.c src/core/*.cpp src/math/*.cpp  -I /Library/Frameworks/SDL2.framework/Headers -I ./dependencies/include -I ./imgui -F /Library/Frameworks -framework SDL2 -framework OpenGL -rpath "@loader_path/dependencies/lib" -rpath "/Library/Frameworks" -L ./dependencies/lib -lassimp -lsoloud_static_mac -framework AudioToolbox -std=c++2a -Wno-deprecated -o main
+g++ src/core/input/*.cpp imgui/*.cpp  src/demo/*.cpp src/gui/*.cpp src/*.cpp src/*.c src/core/*.cpp src/math/*.cpp  -I /Library/Frameworks/SDL2.framework/Headers -I ./dependencies/include -I ./imgui -F /Library/Frameworks -framework SDL2 -framework OpenGL -rpath "@loader_path/dependencies/lib" -rpath "/Library/Frameworks" -L ./dependencies/lib -lassimp -lsoloud_static_mac -framework AudioToolbox -std=c++2a -Wno-deprecated -o main

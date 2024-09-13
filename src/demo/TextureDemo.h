@@ -4,6 +4,7 @@
 #include "../core/Window.h"
 #include "../core/Texture.h"
 #include "../core/Shader.h"
+#include "../math/lnal.h"
 
 class TextureDemo : public FeatureDemo
 {
@@ -12,6 +13,9 @@ private:
     Window* win = nullptr;
 
     Shader texture_shader{};
+    Texture tex{};
+
+    lnal::vec3 tex_color = { 1.0, 1.0, 1.0 };
 
     void toggle_cursor();
 

@@ -4,6 +4,24 @@
 #include "../core/engine_time.h"
 #include "../math/lnal.h"
 #include <cmath>
+#include <iostream>
+#include <graphics.h>
+
+static unsigned int vao, vbo, ebo;
+
+static float vertices[] = 
+{
+    -0.5, -0.5, 0.0,   0.0, 0.0,
+    0.5, -0.5, 0.0,    1.0, 0.0,
+    0.5, 0.5, 0.0,     1.0, 1.0,
+    -0.5, 0.5, 0.0,    0.0, 1.0
+};
+
+static unsigned int indices[] = 
+{
+    0, 1, 2,
+    2, 3, 0
+};
 
 
 bool TextureDemo::init(Window* win)
@@ -11,6 +29,42 @@ bool TextureDemo::init(Window* win)
     this->win = win;
 
     cam.gen_perspective(PI / 2, ((float)win->get_width()) / ((float)win->get_height()), 0.1, 100.0);
+
+    if(!texture_shader.load("./shader/texture.vert", "./shader/texture.frag"))
+    {
+        std::cerr << "Failed to load Texture Shader" << std::endl;
+        return false;
+    }
+
+    if(!tex.load("./assets/img/container.jpg"))
+    {
+        std::cerr << "Failed to load Texture" << std::endl;
+        return false;
+    }
+
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ebo);
+
+    glBindVertexArray(vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    // Enable attributes 
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     cam.position = { 0.0, 0.0, 5.0 };
     cam.forward = { 0.0, 0.0, 0.0 };
@@ -81,6 +135,20 @@ void TextureDemo::update()
 
 void TextureDemo::draw()
 {
+    lnal::mat4 model(1.0);
+
+    texture_shader.bind();
+    texture_shader.set_mat4fv("model", model.data());
+    texture_shader.set_mat4fv("view", cam.get_view());
+    texture_shader.set_mat4fv("projection", cam.get_projection());
+    texture_shader.set_int("container", 0);
+    texture_shader.set_vec3fv("tex_color", tex_color.data());
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex.get_id());
+
+    glBindVertexArray(vao);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 }
 
@@ -100,7 +168,6 @@ void TextureDemo::toggle_cursor()
 
 void TextureDemo::gui_create_frame()
 {
-    static float light_color[3];
     ImGui::SeparatorText("Texture");
-    ImGui::ColorEdit3("Color", light_color);
+    ImGui::ColorEdit3("Color", tex_color.data());
 }

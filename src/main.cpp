@@ -11,8 +11,15 @@
 #include "./demo/demo.h"
 
 
-const int WIN_WIDTH = 1920;
-const int WIN_HEIGHT = 1080;
+const int WIN_WIDTH = 1500;
+const int WIN_HEIGHT = 844;
+
+
+float elapsed_time = 0.0;
+uint64_t previous_time = 0;
+
+/* If FPS == 0.0 then no cap and engine runs as fast as possible */
+float FPS = 60.0;
 
 
 int main()
@@ -33,28 +40,39 @@ int main()
     win.set_cursor_relative(true);
     calc_delta();
     
+    previous_time = get_ticks();
 
     while(!win.is_closed())
     {
-        calc_delta();
 
-        demo_frame_start();
+        uint64_t current_time = get_ticks();
+        elapsed_time += (float)(current_time - previous_time) * 0.001;
+        previous_time = current_time;
+
+        if(elapsed_time >= (1 / FPS) || FPS == 0.0)
+        {
+            calc_delta();
+
+            demo_frame_start();
 
 
-        input_update();
+            input_update();
 
-        demo_update();
+            demo_update();
 
-        gui_create_frame();
+            gui_create_frame();
 
-        /* Draw Stuff */
+            /* Draw Stuff */
 
-        win.clear();
+            win.clear();
 
-        demo_draw();
-        gui_draw();
+            demo_draw();
+            gui_draw();
 
-        win.swap_buffers();
+            win.swap_buffers();
+
+            elapsed_time = 0.0;
+        }
     }
     gui_shutdown();
 }

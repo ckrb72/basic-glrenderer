@@ -4,6 +4,7 @@
 #include "LightingDemo.h"
 #include "TextureDemo.h"
 #include "SpritesheetDemo.h"
+#include "InterpolationDemo.h"
 #include <iostream>
 #include <map>
 #include <memory>
@@ -43,6 +44,13 @@ bool demo_init(Window* win)
     if(!demos[DEMO_SPRITESHEET]->init(win))
     {
         std::cerr << "Failed to load Spritesheet Demo" << std::endl;
+        return false;
+    }
+
+    demos[DEMO_INTERPOLATION] = std::make_shared<InterpolationDemo>();
+    if(!demos[DEMO_INTERPOLATION]->init(win))
+    {
+        std::cerr << "Failed to load Interpolation Demo";
         return false;
     }
 

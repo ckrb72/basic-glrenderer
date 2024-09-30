@@ -4,6 +4,7 @@
 #include <imgui_impl_opengl3.h>
 #include "../demo/demo.h"
 #include <iostream>
+#include "../core/engine_time.h"
 
 static void gen_frame();
 
@@ -77,6 +78,12 @@ static void gen_frame()
     }
 
     ImGui::SeparatorText("Press ESC to toggle mouse");
+
+    ImGui::Spacing();
+
+    std::string fps = "FPS: " + std::to_string(1 / Time.delta);
+
+    ImGui::Text("%s", fps.c_str());
 
     ImGui::Spacing();
 
@@ -163,11 +170,6 @@ static void gen_frame()
             load_demo(DEMO_SPRITESHEET);
         }
     }
-
-    static float f_vec[3];
-    static float light_color[3];
-    static float f_scalar;
-    static int i_scalar;
 
 
     demo_gui_create_frame();
